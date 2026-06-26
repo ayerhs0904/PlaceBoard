@@ -2,3 +2,5 @@ application-local.properties
 .env
 target/
 *.class
+node_modules/
+build/
