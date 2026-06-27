@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import KanbanPage from './pages/KanbanPage';
@@ -10,8 +11,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
-    <Router>
-      <Routes>
+    <>
+      <Toaster position="top-right" />
+      <Router>
+        <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
@@ -41,6 +44,7 @@ function App() {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
+    </>
   );
 }
 
