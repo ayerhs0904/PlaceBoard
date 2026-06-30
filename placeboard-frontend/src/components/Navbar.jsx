@@ -15,10 +15,10 @@ const Navbar = () => {
                 <Link to="/dashboard">PlaceBoard</Link>
             </div>
             <div className="flex gap-6 items-center">
-                <Link to="/dashboard" className="hover:text-blue-200">Dashboard</Link>
-                <Link to="/analytics" className="hover:text-blue-200">Analytics</Link>
-                <Link to="/ai" className="hover:text-blue-200">AI Picks</Link>
-                <Link to="/companies" className="hover:text-blue-200">Companies</Link>
+                <Link to="/dashboard" className="mx-3 hover:text-blue-200">Dashboard</Link>
+                <Link to="/analytics" className="mx-3 hover:text-blue-200">Analytics</Link>
+                <Link to="/ai" className="mx-3 hover:text-blue-200">AI Picks</Link>
+                <Link to="/companies" className="mx-3 hover:text-blue-200">Companies</Link>
                 <button 
                     onClick={handleLogout}
                     className="bg-white text-blue-600 px-4 py-1 rounded font-semibold hover:bg-gray-100 transition-colors"

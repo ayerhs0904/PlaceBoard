@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import toast from 'react-hot-toast';
 
 function RegisterPage() {
@@ -22,12 +22,12 @@ function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/auth/register', formData);
+      const response = await api.post('/api/auth/register', formData);
       const { token, name, email: userEmail, branch, cgpa } = response.data;
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify({ name, email: userEmail, branch, cgpa }));
-      
+
       toast.success('Registration successful!');
       navigate('/dashboard');
     } catch (error) {

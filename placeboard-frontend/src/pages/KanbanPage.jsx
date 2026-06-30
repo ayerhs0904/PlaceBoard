@@ -6,11 +6,11 @@ import { Plus, X, Building, Calendar, Briefcase, Trash2, ChevronRight, CheckCirc
 import toast from 'react-hot-toast';
 
 const COLUMNS = [
-  { id: 'APPLIED', title: 'Applied', color: 'bg-blue-100 border-blue-500 text-blue-800' },
-  { id: 'SHORTLISTED', title: 'Shortlisted', color: 'bg-yellow-100 border-yellow-500 text-yellow-800' },
-  { id: 'INTERVIEW', title: 'Interview', color: 'bg-purple-100 border-purple-500 text-purple-800' },
-  { id: 'OFFER', title: 'Offer', color: 'bg-green-100 border-green-500 text-green-800' },
-  { id: 'REJECTED', title: 'Rejected', color: 'bg-red-100 border-red-500 text-red-800' }
+  { id: 'APPLIED', title: 'Applied', color: 'bg-blue-500' },
+  { id: 'SHORTLISTED', title: 'Shortlisted', color: 'bg-yellow-500' },
+  { id: 'INTERVIEW', title: 'Interview', color: 'bg-purple-500' },
+  { id: 'OFFER', title: 'Offer', color: 'bg-green-500' },
+  { id: 'REJECTED', title: 'Rejected', color: 'bg-red-500' }
 ];
 
 function KanbanPage() {
@@ -226,14 +226,14 @@ function KanbanPage() {
           </div>
         ) : (
           <DragDropContext onDragEnd={onDragEnd}>
-            <div className="flex flex-col md:flex-row gap-6 overflow-x-auto pb-4 items-start flex-1 min-h-0">
+            <div className="flex flex-row gap-4 overflow-x-auto pb-4 items-start flex-1 min-h-0">
               {COLUMNS.map((column) => {
                 const columnApps = getApplicationsByStatus(column.id);
                 
                 return (
-                  <div key={column.id} className="flex-shrink-0 w-80 bg-gray-100 rounded-xl flex flex-col max-h-full">
-                    <div className={`p-3 rounded-t-xl border-t-4 border-opacity-50 flex justify-between items-center ${column.color.split(' ')[0]} ${column.color.split(' ')[1]}`}>
-                      <h3 className={`font-semibold ${column.color.split(' ')[2]}`}>{column.title}</h3>
+                  <div key={column.id} className="flex-shrink-0 w-72 min-w-72 bg-gray-100 rounded-xl flex flex-col max-h-full min-h-96 p-4">
+                    <div className={`${column.color} text-white font-bold px-3 py-2 rounded-lg mb-3 flex justify-between items-center`}>
+                      <h3>{column.title}</h3>
                       <span className="bg-white px-2 py-1 rounded-full text-xs font-bold text-gray-700 shadow-sm">
                         {columnApps.length}
                       </span>
@@ -244,7 +244,7 @@ function KanbanPage() {
                         <div
                           ref={provided.innerRef}
                           {...provided.droppableProps}
-                          className={`flex-1 p-3 overflow-y-auto transition-colors ${snapshot.isDraggingOver ? 'bg-gray-200' : ''}`}
+                          className={`flex-1 overflow-y-auto transition-colors ${snapshot.isDraggingOver ? 'bg-gray-200 rounded-lg' : ''}`}
                         >
                           {columnApps.map((app, index) => (
                             <Draggable key={app.id} draggableId={app.id.toString()} index={index}>
@@ -254,30 +254,15 @@ function KanbanPage() {
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
                                   onClick={() => handleCardClick(app)}
-                                  className={`bg-white p-4 rounded-lg shadow-sm mb-3 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer ${snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''}`}
+                                  className={`bg-white rounded-lg p-4 shadow-sm mb-3 hover:shadow-md transition-shadow cursor-pointer ${snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''}`}
                                 >
                                   <div className="flex items-start justify-between mb-2">
-                                    <h4 className="font-bold text-gray-900 truncate pr-2">{app.company?.name || 'Unknown Company'}</h4>
-                                    <span className={`text-[10px] px-2 py-1 rounded-full font-semibold ${column.color}`}>
-                                      {column.title}
-                                    </span>
+                                    <h4 className="font-bold text-gray-800 truncate pr-2">{app.company?.name || 'Unknown Company'}</h4>
                                   </div>
                                   
-                                  <div className="text-sm text-gray-600 space-y-2">
-                                    {app.company?.sector && (
-                                      <div className="flex items-center">
-                                        <Building size={14} className="mr-2 text-gray-400" />
-                                        <span className="truncate">{app.company.sector}</span>
-                                      </div>
-                                    )}
-                                    <div className="flex items-center">
-                                      <Briefcase size={14} className="mr-2 text-gray-400" />
-                                      <span className="truncate">{app.roleApplied}</span>
-                                    </div>
-                                    <div className="flex items-center">
-                                      <Calendar size={14} className="mr-2 text-gray-400" />
-                                      <span>{new Date(app.appliedDate).toLocaleDateString()}</span>
-                                    </div>
+                                  <div className="space-y-1">
+                                    <div className="text-sm text-gray-600 truncate">{app.roleApplied}</div>
+                                    <div className="text-xs text-gray-400">{new Date(app.appliedDate).toLocaleDateString()}</div>
                                   </div>
                                 </div>
                               )}
