@@ -36,7 +36,8 @@ function KanbanPage() {
   const [roundData, setRoundData] = useState({
     roundType: 'APTITUDE',
     result: 'PENDING',
-    questionsAsked: ''
+    questionsAsked: '',
+    scheduledAt: ''
   });
 
   useEffect(() => {
@@ -150,7 +151,7 @@ function KanbanPage() {
     setTimeout(() => {
       setSelectedApp(null);
       setRounds([]);
-      setRoundData({ roundType: 'APTITUDE', result: 'PENDING', questionsAsked: '' });
+      setRoundData({ roundType: 'APTITUDE', result: 'PENDING', questionsAsked: '', scheduledAt: '' });
     }, 300); // wait for animation
   };
 
@@ -174,7 +175,7 @@ function KanbanPage() {
     try {
       await api.post(`/api/applications/${selectedApp.id}/rounds`, roundData);
       toast.success('Round added successfully');
-      setRoundData({ roundType: 'APTITUDE', result: 'PENDING', questionsAsked: '' });
+      setRoundData({ roundType: 'APTITUDE', result: 'PENDING', questionsAsked: '', scheduledAt: '' });
       fetchRounds(selectedApp.id);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to add round');
@@ -352,6 +353,12 @@ function KanbanPage() {
                             {round.result}
                           </span>
                         </div>
+                        {round.scheduledAt && (
+                          <div className="text-xs text-gray-500 mb-2 flex items-center">
+                            <Calendar size={12} className="mr-1" /> 
+                            {new Date(round.scheduledAt).toLocaleString()}
+                          </div>
+                        )}
                         {round.questionsAsked && (
                           <div className="mt-2 text-sm text-gray-600">
                             <span className="font-medium text-gray-700">Questions/Notes:</span>
@@ -398,6 +405,16 @@ function KanbanPage() {
                     </div>
                   </div>
                   
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Scheduled Date</label>
+                    <input
+                      type="datetime-local"
+                      value={roundData.scheduledAt}
+                      onChange={(e) => setRoundData({...roundData, scheduledAt: e.target.value})}
+                      className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">Questions / Notes</label>
                     <textarea
