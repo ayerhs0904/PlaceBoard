@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
-import { Plus, X, Building, Calendar, Briefcase, Trash2, ChevronRight, CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { Plus, X, Building, Calendar, Briefcase, Trash2, ChevronRight, CheckCircle2, Clock, XCircle, Bell } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const COLUMNS = [
@@ -25,6 +25,15 @@ function KanbanPage() {
   const [rounds, setRounds] = useState([]);
   const [loadingRounds, setLoadingRounds] = useState(false);
 
+  // Reminders state
+  const [reminders, setReminders] = useState([]);
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
+  const [selectedAppForReminder, setSelectedAppForReminder] = useState(null);
+  const [reminderData, setReminderData] = useState({
+    remindAt: '',
+    message: ''
+  });
+
   const [formData, setFormData] = useState({
     companyId: '',
     roleApplied: '',
@@ -42,7 +51,56 @@ function KanbanPage() {
 
   useEffect(() => {
     fetchApplications();
+    fetchReminders();
   }, []);
+
+  const fetchReminders = async () => {
+    try {
+      const response = await api.get('/api/reminders');
+      setReminders(response.data);
+    } catch (error) {
+      console.error('Failed to fetch reminders', error);
+    }
+  };
+
+  const handleOpenReminderModal = (e, app) => {
+    e.stopPropagation();
+    setSelectedAppForReminder(app);
+    setReminderData({ remindAt: '', message: '' });
+    setIsReminderModalOpen(true);
+  };
+
+  const handleCloseReminderModal = () => {
+    setIsReminderModalOpen(false);
+    setSelectedAppForReminder(null);
+  };
+
+  const handleSetReminder = async (e) => {
+    e.preventDefault();
+    if (!selectedAppForReminder) return;
+
+    try {
+      await api.post(`/api/reminders?applicationId=${selectedAppForReminder.id}`, {
+        remindAt: reminderData.remindAt,
+        message: reminderData.message
+      });
+      toast.success('Reminder set successfully');
+      fetchReminders();
+      handleCloseReminderModal();
+    } catch (error) {
+      toast.error('Failed to set reminder');
+    }
+  };
+
+  const handleDeleteReminder = async (id) => {
+    try {
+      await api.delete(`/api/reminders/${id}`);
+      toast.success('Reminder deleted');
+      fetchReminders();
+    } catch (error) {
+      toast.error('Failed to delete reminder');
+    }
+  };
 
   const fetchApplications = async () => {
     try {
@@ -259,6 +317,16 @@ function KanbanPage() {
                                 >
                                   <div className="flex items-start justify-between mb-2">
                                     <h4 className="font-bold text-gray-800 truncate pr-2">{app.company?.name || 'Unknown Company'}</h4>
+                                    <button 
+                                      onClick={(e) => handleOpenReminderModal(e, app)}
+                                      className="text-gray-400 hover:text-blue-500 transition-colors"
+                                      title="Set Reminder"
+                                    >
+                                      <Bell 
+                                        size={16} 
+                                        className={reminders.some(r => r.application?.id === app.id && !r.sent) ? 'fill-blue-500 text-blue-500' : ''} 
+                                      />
+                                    </button>
                                   </div>
                                   
                                   <div className="space-y-1">
@@ -330,6 +398,47 @@ function KanbanPage() {
                     <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">{selectedApp.notes}</p>
                   </div>
                 )}
+              </div>
+
+              {/* Reminders Section */}
+              <div className="space-y-4 bg-yellow-50 p-4 rounded-lg border border-yellow-100 shadow-sm">
+                <h3 className="text-lg font-bold text-yellow-900 border-b border-yellow-200 pb-2 flex items-center">
+                  <Bell size={18} className="mr-2" /> Reminders
+                </h3>
+                {(() => {
+                  const appReminders = reminders.filter(r => r.application?.id === selectedApp.id);
+                  if (appReminders.length === 0) {
+                    return <p className="text-gray-500 text-sm">No reminders set for this application.</p>;
+                  }
+                  return (
+                    <div className="space-y-3">
+                      {appReminders.map(reminder => (
+                        <div key={reminder.id} className="bg-white p-3 rounded-lg border border-yellow-200 flex justify-between items-start shadow-sm">
+                          <div>
+                            <div className="text-sm font-semibold text-gray-800 flex items-center mb-1">
+                              <Calendar size={14} className="mr-1 text-gray-500"/>
+                              {new Date(reminder.remindAt).toLocaleString()}
+                              {reminder.sent ? (
+                                <span className="ml-2 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200">Sent</span>
+                              ) : (
+                                <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">Scheduled</span>
+                              )}
+                            </div>
+                            {reminder.message && (
+                              <p className="text-sm text-gray-600 mt-1">{reminder.message}</p>
+                            )}
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteReminder(reminder.id)}
+                            className="text-gray-400 hover:text-red-500 p-1 rounded-full transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Rounds Section */}
@@ -524,6 +633,68 @@ function KanbanPage() {
                   className="px-4 py-2 border border-transparent rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-medium shadow-sm transition-colors"
                 >
                   Save Application
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Reminder Modal */}
+      {isReminderModalOpen && selectedAppForReminder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-blue-50">
+              <h2 className="text-xl font-bold text-blue-900 flex items-center">
+                <Bell size={20} className="mr-2" /> Set Reminder
+              </h2>
+              <button onClick={handleCloseReminderModal} className="text-gray-500 hover:text-gray-700 hover:bg-gray-200 p-1 rounded-full transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSetReminder} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Application</label>
+                <div className="px-3 py-2 bg-gray-100 rounded-md text-gray-800 font-semibold border border-gray-200">
+                  {selectedAppForReminder.company?.name} - {selectedAppForReminder.roleApplied}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date & Time</label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={reminderData.remindAt}
+                  onChange={(e) => setReminderData({...reminderData, remindAt: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Message (Optional)</label>
+                <textarea
+                  rows="3"
+                  value={reminderData.message}
+                  onChange={(e) => setReminderData({...reminderData, message: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g. Follow up on interview results..."
+                ></textarea>
+              </div>
+              
+              <div className="pt-4 flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={handleCloseReminderModal}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 border border-transparent rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-medium shadow-sm transition-colors"
+                >
+                  Set Reminder
                 </button>
               </div>
             </form>
