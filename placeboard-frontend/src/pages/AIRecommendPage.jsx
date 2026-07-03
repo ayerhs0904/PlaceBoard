@@ -97,9 +97,24 @@ const AIRecommendPage = () => {
                 </div>
 
                 {loading && (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <Loader2 className="h-12 w-12 text-blue-600 animate-spin mb-4" />
-                        <p className="text-lg text-gray-600 font-medium animate-pulse">AI is analyzing your profile...</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-[280px] animate-pulse">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+                                    <div className="h-6 bg-gray-200 rounded w-1/4 rounded-full"></div>
+                                </div>
+                                <div className="mb-4">
+                                    <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                                </div>
+                                <div className="space-y-2 mb-6">
+                                    <div className="h-3 bg-gray-200 rounded w-full"></div>
+                                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                                    <div className="h-3 bg-gray-200 rounded w-4/6"></div>
+                                </div>
+                                <div className="h-10 bg-gray-100 rounded-lg w-full mt-auto"></div>
+                            </div>
+                        ))}
                     </div>
                 )}
 
@@ -161,8 +176,10 @@ const AIRecommendPage = () => {
                 )}
 
                 {!loading && !error && recommendations.length === 0 && (
-                    <div className="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
-                        <p className="text-gray-500 text-lg">Click the button above to discover your best matches.</p>
+                    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
+                        <div className="text-6xl mb-4">✨</div>
+                        <h3 className="text-xl font-bold text-gray-700 mb-2">No recommendations yet</h3>
+                        <p className="text-gray-500 text-lg">Click the button above to get AI recommendations based on your profile.</p>
                     </div>
                 )}
             </main>

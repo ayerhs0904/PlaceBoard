@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import { Plus, X, Building, Calendar, Briefcase, Trash2, ChevronRight, CheckCircle2, Clock, XCircle, Bell } from 'lucide-react';
@@ -280,9 +281,32 @@ function KanbanPage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="flex flex-row gap-4 overflow-x-auto pb-4 items-start flex-1 min-h-0">
+            {COLUMNS.map(col => (
+              <div key={col.id} className="flex-shrink-0 w-72 bg-gray-100 rounded-xl p-4 min-h-96">
+                <div className={`${col.color} h-10 rounded-lg mb-3 animate-pulse opacity-50`}></div>
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-white rounded-lg p-4 shadow-sm mb-3 h-24 animate-pulse"></div>
+                ))}
+              </div>
+            ))}
           </div>
+        ) : applications.length === 0 ? (
+          <motion.div 
+            initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} 
+            className="flex-1 flex flex-col items-center justify-center text-center pb-20"
+          >
+             <div className="text-6xl mb-4">📭</div>
+             <h2 className="text-2xl font-bold text-gray-700 mb-2">No applications yet</h2>
+             <p className="text-gray-500 mb-6 max-w-md">Start tracking your job search by adding your first application.</p>
+             <button
+                onClick={handleOpenModal}
+                className="flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-transform hover:scale-105"
+             >
+                <Plus size={20} className="mr-2" />
+                Add Application
+             </button>
+          </motion.div>
         ) : (
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="flex flex-row gap-4 overflow-x-auto pb-4 items-start flex-1 min-h-0">
@@ -315,24 +339,30 @@ function KanbanPage() {
                                   onClick={() => handleCardClick(app)}
                                   className={`bg-white rounded-lg p-4 shadow-sm mb-3 hover:shadow-md transition-shadow cursor-pointer ${snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''}`}
                                 >
-                                  <div className="flex items-start justify-between mb-2">
-                                    <h4 className="font-bold text-gray-800 truncate pr-2">{app.company?.name || 'Unknown Company'}</h4>
-                                    <button 
-                                      onClick={(e) => handleOpenReminderModal(e, app)}
-                                      className="text-gray-400 hover:text-blue-500 transition-colors"
-                                      title="Set Reminder"
-                                    >
-                                      <Bell 
-                                        size={16} 
-                                        className={reminders.some(r => r.application?.id === app.id && !r.sent) ? 'fill-blue-500 text-blue-500' : ''} 
-                                      />
-                                    </button>
-                                  </div>
-                                  
-                                  <div className="space-y-1">
-                                    <div className="text-sm text-gray-600 truncate">{app.roleApplied}</div>
-                                    <div className="text-xs text-gray-400">{new Date(app.appliedDate).toLocaleDateString()}</div>
-                                  </div>
+                                  <motion.div
+                                    initial={{opacity: 0, y: 20}}
+                                    animate={{opacity: 1, y: 0}}
+                                    transition={{duration: 0.3, delay: index * 0.05}}
+                                  >
+                                    <div className="flex items-start justify-between mb-2">
+                                      <h4 className="font-bold text-gray-800 truncate pr-2">{app.company?.name || 'Unknown Company'}</h4>
+                                      <button 
+                                        onClick={(e) => handleOpenReminderModal(e, app)}
+                                        className="text-gray-400 hover:text-blue-500 transition-colors"
+                                        title="Set Reminder"
+                                      >
+                                        <Bell 
+                                          size={16} 
+                                          className={reminders.some(r => r.application?.id === app.id && !r.sent) ? 'fill-blue-500 text-blue-500' : ''} 
+                                        />
+                                      </button>
+                                    </div>
+                                    
+                                    <div className="space-y-1">
+                                      <div className="text-sm text-gray-600 truncate">{app.roleApplied}</div>
+                                      <div className="text-xs text-gray-400">{new Date(app.appliedDate).toLocaleDateString()}</div>
+                                    </div>
+                                  </motion.div>
                                 </div>
                               )}
                             </Draggable>
@@ -350,15 +380,25 @@ function KanbanPage() {
       </main>
 
       {/* Drawer Backdrop */}
-      {isDrawerOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-30 z-40 transition-opacity"
-          onClick={closeDrawer}
-        />
-      )}
+      <AnimatePresence>
+        {isDrawerOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-30 z-40"
+            onClick={closeDrawer}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Right Drawer */}
-      <div className={`fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <motion.div 
+        initial={{ x: '100%' }}
+        animate={{ x: isDrawerOpen ? 0 : '100%' }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 flex flex-col"
+      >
         {selectedApp && (
           <>
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 flex-shrink-0">
@@ -557,7 +597,7 @@ function KanbanPage() {
             </div>
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* Add Application Modal */}
       {isModalOpen && (

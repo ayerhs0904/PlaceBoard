@@ -213,10 +213,23 @@ const CompanyPage = () => {
                     <div className="flex justify-center items-center h-64">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                     </div>
+                ) : companies.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div className="text-6xl mb-4">🏢</div>
+                        <h3 className="text-2xl font-bold text-gray-700 mb-2">No companies added yet</h3>
+                        <p className="text-gray-500 max-w-md mb-6">Start building your company database to track applications effectively.</p>
+                        <button
+                            onClick={() => setShowAddForm(true)}
+                            className="flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-transform hover:scale-105"
+                        >
+                            <Plus size={20} className="mr-2" />
+                            Add First Company
+                        </button>
+                    </div>
                 ) : filteredCompanies.length === 0 ? (
-                    <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-                        <Building className="mx-auto h-12 w-12 text-gray-300 mb-3" />
-                        <h3 className="text-lg font-medium text-gray-900">No companies found</h3>
+                    <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+                        <Search className="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                        <h3 className="text-xl font-bold text-gray-700">No companies found</h3>
                         <p className="text-gray-500 mt-1">Try adjusting your search or filters.</p>
                     </div>
                 ) : (

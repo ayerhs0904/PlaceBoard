@@ -1,31 +1,88 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [userName, setUserName] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                if (user && user.name) {
+                    setUserName(user.name);
+                }
+            } catch (e) {
+                console.error("Error parsing user data", e);
+            }
+        }
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         navigate('/login');
     };
 
+    const isActive = (path) => {
+        return location.pathname === path ? "text-white font-bold border-b-2 border-white pb-1" : "text-blue-100 hover:text-white transition-colors pb-1";
+    };
+
     return (
-        <nav className="bg-blue-600 p-4 text-white flex justify-between items-center shadow-md">
-            <div className="font-bold text-xl">
-                <Link to="/dashboard">PlaceBoard</Link>
+        <nav className="bg-blue-600 p-4 shadow-md sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
+                <div className="font-extrabold text-2xl tracking-tight">
+                    <Link to="/dashboard" className="bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent drop-shadow-sm">
+                        PlaceBoard
+                    </Link>
+                </div>
+
+                {/* Desktop Menu */}
+                <div className="hidden md:flex gap-8 items-center">
+                    <Link to="/dashboard" className={isActive('/dashboard')}>Dashboard</Link>
+                    <Link to="/analytics" className={isActive('/analytics')}>Analytics</Link>
+                    <Link to="/ai" className={isActive('/ai')}>AI Picks</Link>
+                    <Link to="/companies" className={isActive('/companies')}>Companies</Link>
+                    
+                    <div className="flex items-center gap-4 ml-4 border-l border-blue-400 pl-4">
+                        {userName && <span className="text-white font-medium">Hi, {userName}</span>}
+                        <button 
+                            onClick={handleLogout}
+                            className="bg-white text-blue-600 px-4 py-1.5 rounded-full font-semibold hover:bg-blue-50 transition-colors shadow-sm"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile Menu Toggle */}
+                <div className="md:hidden flex items-center">
+                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-white">
+                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+                </div>
             </div>
-            <div className="flex gap-6 items-center">
-                <Link to="/dashboard" className="mx-3 hover:text-blue-200">Dashboard</Link>
-                <Link to="/analytics" className="mx-3 hover:text-blue-200">Analytics</Link>
-                <Link to="/ai" className="mx-3 hover:text-blue-200">AI Picks</Link>
-                <Link to="/companies" className="mx-3 hover:text-blue-200">Companies</Link>
-                <button 
-                    onClick={handleLogout}
-                    className="bg-white text-blue-600 px-4 py-1 rounded font-semibold hover:bg-gray-100 transition-colors"
-                >
-                    Logout
-                </button>
-            </div>
+
+            {/* Mobile Menu Dropdown */}
+            {isMobileMenuOpen && (
+                <div className="md:hidden mt-4 bg-blue-700 rounded-lg p-4 flex flex-col gap-4 shadow-inner">
+                    {userName && <span className="text-blue-100 font-medium pb-2 border-b border-blue-500">Welcome, {userName}</span>}
+                    <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/dashboard')}>Dashboard</Link>
+                    <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/analytics')}>Analytics</Link>
+                    <Link to="/ai" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/ai')}>AI Picks</Link>
+                    <Link to="/companies" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/companies')}>Companies</Link>
+                    <button 
+                        onClick={handleLogout}
+                        className="bg-white text-blue-600 px-4 py-2 mt-2 rounded font-bold hover:bg-gray-100 w-full text-center"
+                    >
+                        Logout
+                    </button>
+                </div>
+            )}
         </nav>
     );
 };
