@@ -8,10 +8,26 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import AIRecommendPage from './pages/AIRecommendPage';
 import CompanyPage from './pages/CompanyPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import { AnimatePresence } from 'framer-motion';
+import LandingPage from './pages/LandingPage';
+import SplashLoader from './pages/SplashLoader';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem('hasVisitedPlaceBoard');
+    if (!hasVisited) {
+      setShowSplash(true);
+    }
+  }, []);
+
+  const handleSplashFinish = () => {
+    setShowSplash(false);
+    sessionStorage.setItem('hasVisitedPlaceBoard', 'true');
+  };
 
   useEffect(() => {
     let requestCount = 0;
@@ -60,6 +76,9 @@ function App() {
   return (
     <>
       <Toaster position="top-right" />
+      <AnimatePresence>
+        {showSplash && <SplashLoader onFinish={handleSplashFinish} />}
+      </AnimatePresence>
       
       {isLoading && !isError && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -112,8 +131,8 @@ function App() {
           </ProtectedRoute>
         } />
 
-        {/* Redirect root to dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* Landing Page */}
+        <Route path="/" element={<LandingPage />} />
       </Routes>
     </Router>
     </>
