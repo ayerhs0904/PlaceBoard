@@ -1,52 +1,51 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const SplashLoader = ({ onFinish }) => {
+const SplashLoader = ({ onComplete }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onFinish();
-    }, 2500);
+      onComplete();
+    }, 2300);
     return () => clearTimeout(timer);
-  }, [onFinish]);
-
-  const text = "PlaceBoard";
+  }, [onComplete]);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-950"
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="text-white text-5xl md:text-7xl font-bold tracking-wider mb-4 flex">
-        {text.split('').map((char, index) => (
-          <motion.span
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-          >
-            {char}
-          </motion.span>
-        ))}
-      </div>
-      <motion.div
-        className="text-indigo-200 text-xl md:text-2xl font-light mb-12"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
+    <AnimatePresence>
+      <motion.div 
+        className="fixed inset-0 z-[9999] bg-[#050510] flex flex-col items-center justify-center overflow-hidden"
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        Your Smart Placement Tracker
+        <div className="flex flex-col items-center justify-center flex-grow">
+          <motion.div
+            className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#7C3AED] to-[#4F46E5] tracking-tight mb-4"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            PlaceBoard
+          </motion.div>
+          
+          <motion.div
+            className="text-xl md:text-2xl text-gray-400 font-medium tracking-wide"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          >
+            Built for students, by a student
+          </motion.div>
+        </div>
+
+        <div className="w-full h-1 bg-[#050510] absolute bottom-0 left-0">
+          <motion.div 
+            className="h-full bg-gradient-to-r from-[#7C3AED] to-[#4F46E5]"
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 2, ease: "easeInOut" }}
+          />
+        </div>
       </motion.div>
-      <div className="w-64 md:w-80 h-1.5 bg-indigo-950 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-indigo-400"
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-        />
-      </div>
-    </motion.div>
+    </AnimatePresence>
   );
 };
 

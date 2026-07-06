@@ -15,19 +15,9 @@ import SplashLoader from './pages/SplashLoader';
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [showSplash, setShowSplash] = useState(false);
-
-  useEffect(() => {
-    const hasVisited = sessionStorage.getItem('hasVisitedPlaceBoard');
-    if (!hasVisited) {
-      setShowSplash(true);
-    }
-  }, []);
-
-  const handleSplashFinish = () => {
-    setShowSplash(false);
-    sessionStorage.setItem('hasVisitedPlaceBoard', 'true');
-  };
+  const [showSplash, setShowSplash] = useState(
+    !sessionStorage.getItem('splashShown')
+  );
 
   useEffect(() => {
     let requestCount = 0;
@@ -73,12 +63,17 @@ function App() {
     window.location.reload();
   };
 
+  if (showSplash) return (
+    <SplashLoader onComplete={() => {
+      sessionStorage.setItem('splashShown', 'true');
+      setShowSplash(false);
+    }}/>
+  );
+
   return (
     <>
       <Toaster position="top-right" />
-      <AnimatePresence>
-        {showSplash && <SplashLoader onFinish={handleSplashFinish} />}
-      </AnimatePresence>
+
       
       {isLoading && !isError && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">

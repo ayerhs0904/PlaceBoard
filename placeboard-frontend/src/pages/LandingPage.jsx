@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ClipboardList, BarChart2, Cpu, Bell } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const LandingPage = () => {
   return (
@@ -33,27 +34,42 @@ const LandingPage = () => {
           
           {/* Left side */}
           <div className="md:w-1/2 z-10">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-purple-300 mb-6 backdrop-blur-sm">
+            <motion.div 
+              className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-purple-300 mb-6 backdrop-blur-sm"
+              initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.1}}
+            >
               <span className="mr-2">✨</span> AI-Powered • Free for Students
-            </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
+            </motion.div>
+            <motion.h1 
+              className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight"
+              initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.2}}
+            >
               Smart Placement <br />
               Tracking for <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] to-[#4F46E5]">Every Student</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-lg leading-relaxed">
+            </motion.h1>
+            <motion.p 
+              className="text-lg md:text-xl text-gray-400 mb-10 max-w-lg leading-relaxed"
+              initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.3}}
+            >
               Manage applications, track rounds, get AI company recommendations — all in one place.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4 mb-12">
+            </motion.p>
+            <motion.div 
+              className="flex flex-col sm:flex-row items-center gap-4 mb-12"
+              initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.4}}
+            >
               <Link to="/register" className="w-full sm:w-auto text-center bg-gradient-to-r from-[#7C3AED] to-[#4F46E5] text-white px-8 py-4 rounded-full font-semibold hover:opacity-90 transition shadow-[0_0_20px_rgba(124,58,237,0.4)] text-lg">
                 Get Started Free
               </Link>
               <a href="#how-it-works" className="w-full sm:w-auto text-center bg-white/5 border border-white/10 text-white px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition text-lg backdrop-blur-sm">
                 See How It Works
               </a>
-            </div>
+            </motion.div>
             
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400 font-medium">
+            <motion.div 
+              className="flex flex-wrap items-center gap-6 text-sm text-gray-400 font-medium"
+              initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.5}}
+            >
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-400"></div>
                 500+ Students
@@ -70,7 +86,7 @@ const LandingPage = () => {
                 <div className="w-2 h-2 rounded-full bg-orange-400"></div>
                 Free
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Right side - dashboard mockup */}
@@ -78,12 +94,18 @@ const LandingPage = () => {
             {/* Main glass panel */}
             <div className="absolute inset-0 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-6 gap-4 transform rotate-1 hover:rotate-0 transition duration-500">
               
-              <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <motion.div 
+                className="flex justify-between items-center border-b border-white/10 pb-4 bg-white/5 p-4 rounded-2xl border"
+                animate={{y:[0,-10,0]}} transition={{duration:3, repeat:Infinity, delay:0}}
+              >
                 <div className="font-semibold text-lg">Applications</div>
                 <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] to-[#4F46E5]">24</div>
-              </div>
+              </motion.div>
 
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+              <motion.div 
+                className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3"
+                animate={{y:[0,-10,0]}} transition={{duration:3, repeat:Infinity, delay:0.5}}
+              >
                 <div className="text-sm text-gray-400">Status Overview</div>
                 <div className="flex justify-between items-center bg-[#050510]/50 rounded-xl p-3">
                   <span className="text-gray-300">Google</span>
@@ -97,9 +119,12 @@ const LandingPage = () => {
                   <span className="text-gray-300">Amazon</span>
                   <span className="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full border border-purple-500/20">Applied</span>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="bg-gradient-to-r from-[#7C3AED]/20 to-[#4F46E5]/20 border border-purple-500/30 rounded-2xl p-5 mt-auto relative overflow-hidden">
+              <motion.div 
+                className="bg-gradient-to-r from-[#7C3AED]/20 to-[#4F46E5]/20 border border-purple-500/30 rounded-2xl p-5 mt-auto relative overflow-hidden"
+                animate={{y:[0,-10,0]}} transition={{duration:3, repeat:Infinity, delay:1}}
+              >
                 <div className="absolute top-0 right-0 p-4 opacity-20">
                   <Cpu size={48} />
                 </div>
@@ -112,7 +137,7 @@ const LandingPage = () => {
                 <div className="w-full bg-[#050510]/50 rounded-full h-2">
                   <div className="bg-gradient-to-r from-[#7C3AED] to-[#4F46E5] h-2 rounded-full" style={{ width: '85%' }}></div>
                 </div>
-              </div>
+              </motion.div>
 
             </div>
           </div>
@@ -160,37 +185,49 @@ const LandingPage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group">
+            <motion.div 
+              className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group"
+              whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0}}
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
                 <ClipboardList size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">Visual Kanban</h3>
               <p className="text-gray-400 leading-relaxed">Drag and drop tracking to manage your applications across different stages seamlessly.</p>
-            </div>
+            </motion.div>
             
-            <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group">
+            <motion.div 
+              className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group"
+              whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0.1}}
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 mb-6 group-hover:scale-110 transition-transform">
                 <Cpu size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">AI Recommendations</h3>
               <p className="text-gray-400 leading-relaxed">Smart company picks based on your profile, skills, and past applications.</p>
-            </div>
+            </motion.div>
 
-            <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group">
+            <motion.div 
+              className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group"
+              whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0.2}}
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
                 <BarChart2 size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">Analytics</h3>
               <p className="text-gray-400 leading-relaxed">Real time progress charts and conversion rates to track your success over time.</p>
-            </div>
+            </motion.div>
 
-            <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group">
+            <motion.div 
+              className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition group"
+              whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0.3}}
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
                 <Bell size={28} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">Reminders</h3>
               <p className="text-gray-400 leading-relaxed">Never miss a deadline. Automated alerts for upcoming assessments and interviews.</p>
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -200,29 +237,38 @@ const LandingPage = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-20">How It Works</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-10 relative overflow-hidden">
+              <motion.div 
+                className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-10 relative overflow-hidden"
+                whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0}}
+              >
                 <div className="absolute -top-10 -right-10 text-[150px] font-black text-white/5 leading-none">01</div>
                 <div className="relative z-10">
                   <div className="text-2xl font-bold mb-4 text-white">Register your profile</div>
                   <p className="text-gray-400 text-lg">Sign up in seconds, add your academic details, skills, and preferences.</p>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-10 relative overflow-hidden">
+              <motion.div 
+                className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-10 relative overflow-hidden"
+                whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0.1}}
+              >
                 <div className="absolute -top-10 -right-10 text-[150px] font-black text-white/5 leading-none">02</div>
                 <div className="relative z-10">
                   <div className="text-2xl font-bold mb-4 text-white">Add companies & apply</div>
                   <p className="text-gray-400 text-lg">Log your applications directly on the board. Keep track of every opportunity.</p>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-10 relative overflow-hidden">
+              <motion.div 
+                className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-10 relative overflow-hidden"
+                whileInView={{opacity:1,y:0}} initial={{opacity:0,y:30}} viewport={{once:true}} transition={{delay: 0.2}}
+              >
                 <div className="absolute -top-10 -right-10 text-[150px] font-black text-white/5 leading-none">03</div>
                 <div className="relative z-10">
                   <div className="text-2xl font-bold mb-4 text-white">Track & get matches</div>
                   <p className="text-gray-400 text-lg">Move cards as you progress. Receive AI suggestions for your next big move.</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
