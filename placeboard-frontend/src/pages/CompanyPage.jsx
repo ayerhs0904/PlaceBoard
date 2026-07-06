@@ -7,7 +7,7 @@ import { Building, Search, Filter, Plus, X, Briefcase, MapPin, DollarSign, Award
 const CompanyPage = () => {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     // Filters
     const [search, setSearch] = useState('');
     const [sectorFilter, setSectorFilter] = useState('All');
@@ -89,11 +89,9 @@ const CompanyPage = () => {
         e.preventDefault();
         try {
             const payload = {
-                company: { id: parseInt(appForm.companyId) },
-                roleApplied: appForm.roleApplied,
-                appliedDate: appForm.appliedDate,
-                notes: appForm.notes,
-                status: appForm.status
+                companyId: parseInt(appForm.companyId),
+                role: appForm.roleApplied,
+                notes: appForm.notes
             };
             await api.post('/api/applications', payload);
             toast.success('Application added successfully');
@@ -116,7 +114,7 @@ const CompanyPage = () => {
     });
 
     const getSectorColor = (sector) => {
-        switch(sector) {
+        switch (sector) {
             case 'IT': return 'bg-blue-100 text-blue-800 border-blue-200';
             case 'Finance': return 'bg-green-100 text-green-800 border-green-200';
             case 'Core': return 'bg-orange-100 text-orange-800 border-orange-200';
@@ -150,11 +148,11 @@ const CompanyPage = () => {
                         <form onSubmit={handleAddCompany} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-                                <input required type="text" value={newCompany.name} onChange={e => setNewCompany({...newCompany, name: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Google" />
+                                <input required type="text" value={newCompany.name} onChange={e => setNewCompany({ ...newCompany, name: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Google" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Sector</label>
-                                <select value={newCompany.sector} onChange={e => setNewCompany({...newCompany, sector: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <select value={newCompany.sector} onChange={e => setNewCompany({ ...newCompany, sector: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                                     <option value="IT">IT</option>
                                     <option value="Finance">Finance</option>
                                     <option value="Core">Core</option>
@@ -163,19 +161,19 @@ const CompanyPage = () => {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Min CGPA</label>
-                                <input required type="number" step="0.1" min="0" max="10" value={newCompany.minCgpa} onChange={e => setNewCompany({...newCompany, minCgpa: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 7.5" />
+                                <input required type="number" step="0.1" min="0" max="10" value={newCompany.minCgpa} onChange={e => setNewCompany({ ...newCompany, minCgpa: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 7.5" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Package Range</label>
-                                <input required type="text" value={newCompany.packageRange} onChange={e => setNewCompany({...newCompany, packageRange: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 12-15 LPA" />
+                                <input required type="text" value={newCompany.packageRange} onChange={e => setNewCompany({ ...newCompany, packageRange: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 12-15 LPA" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Bond Details</label>
-                                <input required type="text" value={newCompany.bond} onChange={e => setNewCompany({...newCompany, bond: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 1 Year / None" />
+                                <input required type="text" value={newCompany.bond} onChange={e => setNewCompany({ ...newCompany, bond: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 1 Year / None" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                                <input required type="text" value={newCompany.location} onChange={e => setNewCompany({...newCompany, location: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Bangalore" />
+                                <input required type="text" value={newCompany.location} onChange={e => setNewCompany({ ...newCompany, location: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Bangalore" />
                             </div>
                             <div className="md:col-span-2 lg:col-span-3 flex justify-end mt-2">
                                 <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
@@ -189,11 +187,11 @@ const CompanyPage = () => {
                 {/* Filters */}
                 <div className="bg-white p-4 rounded-xl shadow-sm mb-8 border border-gray-100 flex flex-col md:flex-row gap-4 items-end">
                     <div className="flex-1 w-full">
-                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center"><Search size={16} className="mr-1"/> Search</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center"><Search size={16} className="mr-1" /> Search</label>
                         <input type="text" value={search} onChange={e => setSearch(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Search companies..." />
                     </div>
                     <div className="w-full md:w-48">
-                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center"><Filter size={16} className="mr-1"/> Sector</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center"><Filter size={16} className="mr-1" /> Sector</label>
                         <select value={sectorFilter} onChange={e => setSectorFilter(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                             <option value="All">All Sectors</option>
                             <option value="IT">IT</option>
@@ -203,7 +201,7 @@ const CompanyPage = () => {
                         </select>
                     </div>
                     <div className="w-full md:w-48">
-                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center"><Award size={16} className="mr-1"/> Min CGPA</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center"><Award size={16} className="mr-1" /> Min CGPA</label>
                         <input type="number" step="0.1" min="0" max="10" value={cgpaFilter} onChange={e => setCgpaFilter(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Any" />
                     </div>
                 </div>
@@ -243,7 +241,7 @@ const CompanyPage = () => {
                                             {company.sector}
                                         </span>
                                     </div>
-                                    
+
                                     <div className="space-y-3 mt-4">
                                         <div className="flex items-center text-sm text-gray-600">
                                             <DollarSign size={16} className="mr-2 text-gray-400" />
@@ -288,47 +286,47 @@ const CompanyPage = () => {
                                 <X size={20} />
                             </button>
                         </div>
-                        
+
                         <form onSubmit={handleAddApplication} className="p-6 space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
                                 <input type="text" disabled value={selectedCompanyName} className="w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-100 text-gray-500" />
                             </div>
-                            
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Role Applied For</label>
                                 <input
                                     type="text"
                                     required
                                     value={appForm.roleApplied}
-                                    onChange={(e) => setAppForm({...appForm, roleApplied: e.target.value})}
+                                    onChange={(e) => setAppForm({ ...appForm, roleApplied: e.target.value })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="e.g. Software Engineer"
                                 />
                             </div>
-                            
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Date Applied</label>
                                 <input
                                     type="date"
                                     required
                                     value={appForm.appliedDate}
-                                    onChange={(e) => setAppForm({...appForm, appliedDate: e.target.value})}
+                                    onChange={(e) => setAppForm({ ...appForm, appliedDate: e.target.value })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                 />
                             </div>
-                            
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
                                 <textarea
                                     rows="3"
                                     value={appForm.notes}
-                                    onChange={(e) => setAppForm({...appForm, notes: e.target.value})}
+                                    onChange={(e) => setAppForm({ ...appForm, notes: e.target.value })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="Any additional details..."
                                 ></textarea>
                             </div>
-                            
+
                             <div className="pt-4 flex justify-end space-x-3">
                                 <button
                                     type="button"

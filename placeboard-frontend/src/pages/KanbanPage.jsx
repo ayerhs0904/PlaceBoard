@@ -182,7 +182,7 @@ function KanbanPage() {
     try {
       await api.patch(`/api/applications/${appId}/status`, { status: newStatus });
       toast.success('Status updated');
-      
+
       // Update selected app status in drawer if it's open
       if (selectedApp && selectedApp.id === appId) {
         setSelectedApp({ ...selectedApp, status: newStatus });
@@ -243,7 +243,7 @@ function KanbanPage() {
 
   const handleDeleteApplication = async () => {
     if (!selectedApp) return;
-    
+
     if (window.confirm('Are you sure you want to delete this application?')) {
       try {
         await api.delete(`/api/applications/${selectedApp.id}`);
@@ -257,7 +257,7 @@ function KanbanPage() {
   };
 
   const getResultIcon = (result) => {
-    switch(result) {
+    switch (result) {
       case 'PASS': return <CheckCircle2 size={16} className="text-green-600" />;
       case 'FAIL': return <XCircle size={16} className="text-red-600" />;
       default: return <Clock size={16} className="text-yellow-600" />;
@@ -267,7 +267,7 @@ function KanbanPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans overflow-hidden">
       <Navbar />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-[calc(100vh-64px)] flex flex-col">
         <div className="flex justify-between items-center mb-8 flex-shrink-0">
           <h1 className="text-3xl font-bold text-gray-900">Application Tracking</h1>
@@ -292,27 +292,27 @@ function KanbanPage() {
             ))}
           </div>
         ) : applications.length === 0 ? (
-          <motion.div 
-            initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} 
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
             className="flex-1 flex flex-col items-center justify-center text-center pb-20"
           >
-             <div className="text-6xl mb-4">📭</div>
-             <h2 className="text-2xl font-bold text-gray-700 mb-2">No applications yet</h2>
-             <p className="text-gray-500 mb-6 max-w-md">Start tracking your job search by adding your first application.</p>
-             <button
-                onClick={handleOpenModal}
-                className="flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-transform hover:scale-105"
-             >
-                <Plus size={20} className="mr-2" />
-                Add Application
-             </button>
+            <div className="text-6xl mb-4">📭</div>
+            <h2 className="text-2xl font-bold text-gray-700 mb-2">No applications yet</h2>
+            <p className="text-gray-500 mb-6 max-w-md">Start tracking your job search by adding your first application.</p>
+            <button
+              onClick={handleOpenModal}
+              className="flex items-center px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-transform hover:scale-105"
+            >
+              <Plus size={20} className="mr-2" />
+              Add Application
+            </button>
           </motion.div>
         ) : (
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="flex flex-row gap-4 overflow-x-auto pb-4 items-start flex-1 min-h-0">
               {COLUMNS.map((column) => {
                 const columnApps = getApplicationsByStatus(column.id);
-                
+
                 return (
                   <div key={column.id} className="flex-shrink-0 w-72 min-w-72 bg-gray-100 rounded-xl flex flex-col max-h-full min-h-96 p-4">
                     <div className={`${column.color} text-white font-bold px-3 py-2 rounded-lg mb-3 flex justify-between items-center`}>
@@ -340,24 +340,24 @@ function KanbanPage() {
                                   className={`bg-white rounded-lg p-4 shadow-sm mb-3 hover:shadow-md transition-shadow cursor-pointer ${snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''}`}
                                 >
                                   <motion.div
-                                    initial={{opacity: 0, y: 20}}
-                                    animate={{opacity: 1, y: 0}}
-                                    transition={{duration: 0.3, delay: index * 0.05}}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: index * 0.05 }}
                                   >
                                     <div className="flex items-start justify-between mb-2">
-                                      <h4 className="font-bold text-gray-800 truncate pr-2">{app.company?.name || 'Unknown Company'}</h4>
-                                      <button 
+                                      <h4 className="font-bold text-gray-800 truncate pr-2">{app.companyName || 'Unknown Company'}</h4>
+                                      <button
                                         onClick={(e) => handleOpenReminderModal(e, app)}
                                         className="text-gray-400 hover:text-blue-500 transition-colors"
                                         title="Set Reminder"
                                       >
-                                        <Bell 
-                                          size={16} 
-                                          className={reminders.some(r => r.application?.id === app.id && !r.sent) ? 'fill-blue-500 text-blue-500' : ''} 
+                                        <Bell
+                                          size={16}
+                                          className={reminders.some(r => r.application?.id === app.id && !r.sent) ? 'fill-blue-500 text-blue-500' : ''}
                                         />
                                       </button>
                                     </div>
-                                    
+
                                     <div className="space-y-1">
                                       <div className="text-sm text-gray-600 truncate">{app.roleApplied}</div>
                                       <div className="text-xs text-gray-400">{new Date(app.appliedDate).toLocaleDateString()}</div>
@@ -382,7 +382,7 @@ function KanbanPage() {
       {/* Drawer Backdrop */}
       <AnimatePresence>
         {isDrawerOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -393,7 +393,7 @@ function KanbanPage() {
       </AnimatePresence>
 
       {/* Right Drawer */}
-      <motion.div 
+      <motion.div
         initial={{ x: '100%' }}
         animate={{ x: isDrawerOpen ? 0 : '100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
@@ -417,7 +417,7 @@ function KanbanPage() {
                   <h3 className="text-2xl font-bold text-gray-900">{selectedApp.company?.name}</h3>
                   <p className="text-blue-600 font-medium">{selectedApp.roleApplied}</p>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-500 block mb-1">Status</span>
@@ -456,7 +456,7 @@ function KanbanPage() {
                         <div key={reminder.id} className="bg-white p-3 rounded-lg border border-yellow-200 flex justify-between items-start shadow-sm">
                           <div>
                             <div className="text-sm font-semibold text-gray-800 flex items-center mb-1">
-                              <Calendar size={14} className="mr-1 text-gray-500"/>
+                              <Calendar size={14} className="mr-1 text-gray-500" />
                               {new Date(reminder.remindAt).toLocaleString()}
                               {reminder.sent ? (
                                 <span className="ml-2 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200">Sent</span>
@@ -468,7 +468,7 @@ function KanbanPage() {
                               <p className="text-sm text-gray-600 mt-1">{reminder.message}</p>
                             )}
                           </div>
-                          <button 
+                          <button
                             onClick={() => handleDeleteReminder(reminder.id)}
                             className="text-gray-400 hover:text-red-500 p-1 rounded-full transition-colors"
                           >
@@ -484,7 +484,7 @@ function KanbanPage() {
               {/* Rounds Section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-bold text-gray-900 border-b pb-2">Interview Rounds</h3>
-                
+
                 {loadingRounds ? (
                   <div className="flex justify-center p-4">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
@@ -504,7 +504,7 @@ function KanbanPage() {
                         </div>
                         {round.scheduledAt && (
                           <div className="text-xs text-gray-500 mb-2 flex items-center">
-                            <Calendar size={12} className="mr-1" /> 
+                            <Calendar size={12} className="mr-1" />
                             {new Date(round.scheduledAt).toLocaleString()}
                           </div>
                         )}
@@ -531,7 +531,7 @@ function KanbanPage() {
                       <label className="block text-xs font-medium text-gray-700 mb-1">Round Type</label>
                       <select
                         value={roundData.roundType}
-                        onChange={(e) => setRoundData({...roundData, roundType: e.target.value})}
+                        onChange={(e) => setRoundData({ ...roundData, roundType: e.target.value })}
                         className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="APTITUDE">Aptitude</option>
@@ -544,7 +544,7 @@ function KanbanPage() {
                       <label className="block text-xs font-medium text-gray-700 mb-1">Result</label>
                       <select
                         value={roundData.result}
-                        onChange={(e) => setRoundData({...roundData, result: e.target.value})}
+                        onChange={(e) => setRoundData({ ...roundData, result: e.target.value })}
                         className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="PENDING">Pending</option>
@@ -553,13 +553,13 @@ function KanbanPage() {
                       </select>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">Scheduled Date</label>
                     <input
                       type="datetime-local"
                       value={roundData.scheduledAt}
-                      onChange={(e) => setRoundData({...roundData, scheduledAt: e.target.value})}
+                      onChange={(e) => setRoundData({ ...roundData, scheduledAt: e.target.value })}
                       className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -569,12 +569,12 @@ function KanbanPage() {
                     <textarea
                       rows="2"
                       value={roundData.questionsAsked}
-                      onChange={(e) => setRoundData({...roundData, questionsAsked: e.target.value})}
+                      onChange={(e) => setRoundData({ ...roundData, questionsAsked: e.target.value })}
                       className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                       placeholder="e.g. System design for URL shortener..."
                     ></textarea>
                   </div>
-                  
+
                   <button
                     type="submit"
                     className="w-full py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
@@ -609,14 +609,14 @@ function KanbanPage() {
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
                 <select
                   required
                   value={formData.companyId}
-                  onChange={(e) => setFormData({...formData, companyId: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, companyId: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="" disabled>Select a company</option>
@@ -625,41 +625,41 @@ function KanbanPage() {
                   ))}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Role Applied For</label>
                 <input
                   type="text"
                   required
                   value={formData.roleApplied}
-                  onChange={(e) => setFormData({...formData, roleApplied: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, roleApplied: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g. Software Engineer"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date Applied</label>
                 <input
                   type="date"
                   required
                   value={formData.appliedDate}
-                  onChange={(e) => setFormData({...formData, appliedDate: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, appliedDate: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
                 <textarea
                   rows="3"
                   value={formData.notes}
-                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Any additional details..."
                 ></textarea>
               </div>
-              
+
               <div className="pt-4 flex justify-end space-x-3">
                 <button
                   type="button"
@@ -691,7 +691,7 @@ function KanbanPage() {
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleSetReminder} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Application</label>
@@ -699,29 +699,29 @@ function KanbanPage() {
                   {selectedAppForReminder.company?.name} - {selectedAppForReminder.roleApplied}
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date & Time</label>
                 <input
                   type="datetime-local"
                   required
                   value={reminderData.remindAt}
-                  onChange={(e) => setReminderData({...reminderData, remindAt: e.target.value})}
+                  onChange={(e) => setReminderData({ ...reminderData, remindAt: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Message (Optional)</label>
                 <textarea
                   rows="3"
                   value={reminderData.message}
-                  onChange={(e) => setReminderData({...reminderData, message: e.target.value})}
+                  onChange={(e) => setReminderData({ ...reminderData, message: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g. Follow up on interview results..."
                 ></textarea>
               </div>
-              
+
               <div className="pt-4 flex justify-end space-x-3">
                 <button
                   type="button"
