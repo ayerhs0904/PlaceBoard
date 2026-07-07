@@ -1,6 +1,7 @@
 package com.placeboard.entity;
 
 import jakarta.persistence.Entity;
+import java.time.LocalDate;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +23,9 @@ public class Company {
     private Long id;
 
     private String name;
+    private LocalDate deadline;
+    private String jobRole;
+    private String jobUrl;
     private String sector;
     private Double minCgpa;
     private String packageRange;

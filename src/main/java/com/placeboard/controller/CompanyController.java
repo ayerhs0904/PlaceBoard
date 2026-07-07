@@ -1,6 +1,7 @@
 package com.placeboard.controller;
 
 import com.placeboard.dto.CompanyDto;
+import com.placeboard.dto.CompanyRequestDto;
 import com.placeboard.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class CompanyController {
     }
     
     @PostMapping
-    public ResponseEntity<CompanyDto> createCompany(@RequestBody CompanyDto companyDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(companyDto));
+    public ResponseEntity<CompanyDto> createCompany(@RequestBody CompanyRequestDto companyRequestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(companyRequestDto));
     }
 }

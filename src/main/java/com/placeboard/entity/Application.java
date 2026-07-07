@@ -40,6 +40,7 @@ public class Application {
     private ApplicationStatus status;
 
     private String role;
+    private String jobUrl;
     private LocalDate appliedDate;
     private String notes;
 }

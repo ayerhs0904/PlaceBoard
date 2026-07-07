@@ -41,6 +41,7 @@ public class ApplicationService {
                 .company(company)
                 .status(ApplicationStatus.APPLIED)
                 .role(request.getRole())
+                .jobUrl(request.getJobUrl())
                 .appliedDate(LocalDate.now())
                 .notes(request.getNotes())
                 .build();
@@ -77,6 +78,7 @@ public class ApplicationService {
                 .companyName(application.getCompany().getName())
                 .status(application.getStatus())
                 .role(application.getRole())
+                .jobUrl(application.getJobUrl())
                 .appliedDate(application.getAppliedDate())
                 .notes(application.getNotes())
                 .build();

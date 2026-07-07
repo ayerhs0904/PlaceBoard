@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public class ApplicationRequestDto {
     private Long companyId;
     private String role;
+    private String jobUrl;
     private String notes;
     private LocalDate appliedDate;
 }

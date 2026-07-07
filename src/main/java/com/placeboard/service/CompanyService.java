@@ -1,6 +1,7 @@
 package com.placeboard.service;
 
 import com.placeboard.dto.CompanyDto;
+import com.placeboard.dto.CompanyRequestDto;
 import com.placeboard.entity.Company;
 import com.placeboard.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,17 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
-    public CompanyDto createCompany(CompanyDto companyDto) {
+    public CompanyDto createCompany(CompanyRequestDto companyRequestDto) {
         Company company = Company.builder()
-                .name(companyDto.getName())
-                .sector(companyDto.getSector())
-                .minCgpa(companyDto.getMinCgpa())
-                .packageRange(companyDto.getPackageRange())
-                .bond(companyDto.getBond())
-                .location(companyDto.getLocation())
+                .name(companyRequestDto.getName())
+                .deadline(companyRequestDto.getDeadline())
+                .jobRole(companyRequestDto.getJobRole())
+                .jobUrl(companyRequestDto.getJobUrl())
+                .sector(companyRequestDto.getSector())
+                .minCgpa(companyRequestDto.getMinCgpa())
+                .packageRange(companyRequestDto.getPackageRange())
+                .bond(companyRequestDto.getBond())
+                .location(companyRequestDto.getLocation())
                 .build();
         
         Company savedCompany = companyRepository.save(company);
@@ -39,6 +43,9 @@ public class CompanyService {
         return CompanyDto.builder()
                 .id(company.getId())
                 .name(company.getName())
+                .deadline(company.getDeadline())
+                .jobRole(company.getJobRole())
+                .jobUrl(company.getJobUrl())
                 .sector(company.getSector())
                 .minCgpa(company.getMinCgpa())
                 .packageRange(company.getPackageRange())
