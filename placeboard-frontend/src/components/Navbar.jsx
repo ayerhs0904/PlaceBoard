@@ -7,6 +7,12 @@ const Navbar = () => {
     const location = useLocation();
     const [userName, setUserName] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+    const getInitials = (name) => {
+        if (!name) return 'U';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    };
 
     useEffect(() => {
         const userStr = localStorage.getItem('user');
@@ -48,14 +54,38 @@ const Navbar = () => {
                     <Link to="/ai" className={isActive('/ai')}>AI Picks</Link>
                     <Link to="/companies" className={isActive('/companies')}>Companies</Link>
                     
-                    <div className="flex items-center gap-4 ml-4 border-l border-blue-400 pl-4">
-                        {userName && <span className="text-white font-medium">Hi, {userName}</span>}
+                    <div className="flex items-center gap-4 ml-4 border-l border-blue-400 pl-4 relative">
                         <button 
-                            onClick={handleLogout}
-                            className="bg-white text-blue-600 px-4 py-1.5 rounded-full font-semibold hover:bg-blue-50 transition-colors shadow-sm"
+                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                            className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-blue-700 font-bold hover:bg-blue-50 transition-colors shadow-sm focus:outline-none"
                         >
-                            Logout
+                            {getInitials(userName)}
                         </button>
+                        
+                        {isProfileDropdownOpen && (
+                            <div className="absolute top-12 right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
+                                <div className="px-4 py-2 border-b border-gray-100">
+                                    <p className="text-sm text-gray-500">Signed in as</p>
+                                    <p className="text-sm font-medium text-gray-900 truncate">{userName}</p>
+                                </div>
+                                <Link 
+                                    to="/profile" 
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                    onClick={() => setIsProfileDropdownOpen(false)}
+                                >
+                                    Profile
+                                </Link>
+                                <button 
+                                    onClick={() => {
+                                        setIsProfileDropdownOpen(false);
+                                        handleLogout();
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -75,9 +105,10 @@ const Navbar = () => {
                     <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/analytics')}>Analytics</Link>
                     <Link to="/ai" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/ai')}>AI Picks</Link>
                     <Link to="/companies" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/companies')}>Companies</Link>
+                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/profile')}>Profile</Link>
                     <button 
                         onClick={handleLogout}
-                        className="bg-white text-blue-600 px-4 py-2 mt-2 rounded font-bold hover:bg-gray-100 w-full text-center"
+                        className="bg-white text-red-600 px-4 py-2 mt-2 rounded font-bold hover:bg-gray-100 w-full text-center"
                     >
                         Logout
                     </button>

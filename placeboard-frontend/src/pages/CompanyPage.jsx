@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-import { Building, Search, Filter, Plus, X, Briefcase, MapPin, DollarSign, Award, FileText } from 'lucide-react';
+import { Building, Search, Filter, Plus, X, Briefcase, MapPin, DollarSign, Award, FileText, ChevronDown, ChevronUp, Link as LinkIcon } from 'lucide-react';
 
 const CompanyPage = () => {
     const [companies, setCompanies] = useState([]);
@@ -17,18 +17,23 @@ const CompanyPage = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [newCompany, setNewCompany] = useState({
         name: '',
+        deadline: '',
+        jobRole: '',
+        jobUrl: '',
         sector: 'IT',
         minCgpa: '',
         packageRange: '',
         bond: '',
         location: ''
     });
+    const [showMoreDetails, setShowMoreDetails] = useState(false);
 
     // Application Modal State
     const [isAppModalOpen, setIsAppModalOpen] = useState(false);
     const [appForm, setAppForm] = useState({
         companyId: '',
         roleApplied: '',
+        jobUrl: '',
         appliedDate: new Date().toISOString().split('T')[0],
         notes: '',
         status: 'APPLIED'
@@ -63,6 +68,9 @@ const CompanyPage = () => {
             toast.success('Company added successfully');
             setNewCompany({
                 name: '',
+                deadline: '',
+                jobRole: '',
+                jobUrl: '',
                 sector: 'IT',
                 minCgpa: '',
                 packageRange: '',
@@ -70,6 +78,7 @@ const CompanyPage = () => {
                 location: ''
             });
             setShowAddForm(false);
+            setShowMoreDetails(false);
             fetchCompanies();
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to add company');
@@ -79,7 +88,8 @@ const CompanyPage = () => {
     const openAppModal = (company) => {
         setAppForm({
             ...appForm,
-            companyId: company.id
+            companyId: company.id,
+            jobUrl: company.jobUrl || ''
         });
         setSelectedCompanyName(company.name);
         setIsAppModalOpen(true);
@@ -91,7 +101,9 @@ const CompanyPage = () => {
             const payload = {
                 companyId: parseInt(appForm.companyId),
                 role: appForm.roleApplied,
-                notes: appForm.notes
+                jobUrl: appForm.jobUrl,
+                notes: appForm.notes,
+                appliedDate: appForm.appliedDate
             };
             await api.post('/api/applications', payload);
             toast.success('Application added successfully');
@@ -99,6 +111,7 @@ const CompanyPage = () => {
             setAppForm({
                 ...appForm,
                 roleApplied: '',
+                jobUrl: '',
                 notes: ''
             });
         } catch (error) {
@@ -121,6 +134,18 @@ const CompanyPage = () => {
             case 'Consulting': return 'bg-purple-100 text-purple-800 border-purple-200';
             default: return 'bg-gray-100 text-gray-800 border-gray-200';
         }
+    };
+
+    const getDeadlineWarning = (deadline) => {
+        if (!deadline) return { color: 'bg-gray-100 text-gray-800', text: 'No Deadline' };
+        const dlDate = new Date(deadline);
+        const today = new Date();
+        const diffTime = dlDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays < 0) return { color: 'bg-red-100 text-red-800 border-red-200', text: 'Passed' };
+        if (diffDays <= 7) return { color: 'bg-yellow-100 text-yellow-800 border-yellow-200', text: `${diffDays} days left` };
+        return { color: 'bg-green-100 text-green-800 border-green-200', text: 'Safe' };
     };
 
     return (
@@ -147,34 +172,62 @@ const CompanyPage = () => {
                         <h2 className="text-xl font-bold text-gray-800 mb-4">Add New Company</h2>
                         <form onSubmit={handleAddCompany} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
                                 <input required type="text" value={newCompany.name} onChange={e => setNewCompany({ ...newCompany, name: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Google" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Sector</label>
-                                <select value={newCompany.sector} onChange={e => setNewCompany({ ...newCompany, sector: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="IT">IT</option>
-                                    <option value="Finance">Finance</option>
-                                    <option value="Core">Core</option>
-                                    <option value="Consulting">Consulting</option>
-                                </select>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Deadline *</label>
+                                <input required type="date" value={newCompany.deadline} onChange={e => setNewCompany({ ...newCompany, deadline: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Min CGPA</label>
-                                <input required type="number" step="0.1" min="0" max="10" value={newCompany.minCgpa} onChange={e => setNewCompany({ ...newCompany, minCgpa: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 7.5" />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Job Role *</label>
+                                <input required type="text" value={newCompany.jobRole} onChange={e => setNewCompany({ ...newCompany, jobRole: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. SDE" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Package Range</label>
-                                <input required type="text" value={newCompany.packageRange} onChange={e => setNewCompany({ ...newCompany, packageRange: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 12-15 LPA" />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Job URL *</label>
+                                <input required type="url" value={newCompany.jobUrl} onChange={e => setNewCompany({ ...newCompany, jobUrl: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. https://linkedin.com/..." />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Bond Details</label>
-                                <input required type="text" value={newCompany.bond} onChange={e => setNewCompany({ ...newCompany, bond: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 1 Year / None" />
+
+                            <div className="md:col-span-2 lg:col-span-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMoreDetails(!showMoreDetails)}
+                                    className="flex items-center text-blue-600 font-medium text-sm hover:text-blue-800 transition-colors"
+                                >
+                                    {showMoreDetails ? <ChevronUp size={16} className="mr-1" /> : <ChevronDown size={16} className="mr-1" />}
+                                    {showMoreDetails ? 'Hide Optional Details' : 'Show Optional Details'}
+                                </button>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                                <input required type="text" value={newCompany.location} onChange={e => setNewCompany({ ...newCompany, location: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Bangalore" />
-                            </div>
+
+                            {showMoreDetails && (
+                                <>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Sector</label>
+                                        <select value={newCompany.sector} onChange={e => setNewCompany({ ...newCompany, sector: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="IT">IT</option>
+                                            <option value="Finance">Finance</option>
+                                            <option value="Core">Core</option>
+                                            <option value="Consulting">Consulting</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Min CGPA</label>
+                                        <input type="number" step="0.1" min="0" max="10" value={newCompany.minCgpa} onChange={e => setNewCompany({ ...newCompany, minCgpa: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 7.5" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Package Range</label>
+                                        <input type="text" value={newCompany.packageRange} onChange={e => setNewCompany({ ...newCompany, packageRange: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 12-15 LPA" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Bond Details</label>
+                                        <input type="text" value={newCompany.bond} onChange={e => setNewCompany({ ...newCompany, bond: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 1 Year / None" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                        <input type="text" value={newCompany.location} onChange={e => setNewCompany({ ...newCompany, location: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Bangalore" />
+                                    </div>
+                                </>
+                            )}
                             <div className="md:col-span-2 lg:col-span-3 flex justify-end mt-2">
                                 <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
                                     Save Company
@@ -235,12 +288,23 @@ const CompanyPage = () => {
                         {filteredCompanies.map(company => (
                             <div key={company.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
                                 <div className="p-5 flex-1">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h3 className="text-xl font-bold text-gray-900 line-clamp-1">{company.name}</h3>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="flex flex-col">
+                                            <h3 className="text-xl font-bold text-gray-900 line-clamp-1">{company.name}</h3>
+                                            {company.jobRole && <span className="text-sm font-medium text-blue-600 mt-1">{company.jobRole}</span>}
+                                        </div>
                                         <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${getSectorColor(company.sector)}`}>
                                             {company.sector}
                                         </span>
                                     </div>
+                                    
+                                    {company.deadline && (
+                                        <div className="mb-4 inline-block">
+                                            <span className={`px-2 py-1 text-xs font-semibold rounded-md border ${getDeadlineWarning(company.deadline).color}`}>
+                                                Deadline: {new Date(company.deadline).toLocaleDateString()} ({getDeadlineWarning(company.deadline).text})
+                                            </span>
+                                        </div>
+                                    )}
 
                                     <div className="space-y-3 mt-4">
                                         <div className="flex items-center text-sm text-gray-600">
@@ -261,13 +325,24 @@ const CompanyPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="p-4 bg-gray-50 border-t border-gray-100">
+                                <div className="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                                    {company.jobUrl && (
+                                        <a
+                                            href={company.jobUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                        >
+                                            <LinkIcon size={16} className="mr-2" />
+                                            View Job
+                                        </a>
+                                    )}
                                     <button
                                         onClick={() => openAppModal(company)}
-                                        className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                                        className="flex-1 flex justify-center items-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                                     >
                                         <Briefcase size={16} className="mr-2" />
-                                        Apply Now
+                                        Apply
                                     </button>
                                 </div>
                             </div>
@@ -302,6 +377,17 @@ const CompanyPage = () => {
                                     onChange={(e) => setAppForm({ ...appForm, roleApplied: e.target.value })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="e.g. Software Engineer"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Job Post URL (Optional)</label>
+                                <input
+                                    type="url"
+                                    value={appForm.jobUrl}
+                                    onChange={(e) => setAppForm({ ...appForm, jobUrl: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="https://..."
                                 />
                             </div>
 

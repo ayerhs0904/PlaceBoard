@@ -7,6 +7,7 @@ import KanbanPage from './pages/KanbanPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import AIRecommendPage from './pages/AIRecommendPage';
 import CompanyPage from './pages/CompanyPage';
+import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AnimatePresence } from 'framer-motion';
 import LandingPage from './pages/LandingPage';
@@ -123,6 +124,11 @@ function App() {
         <Route path="/companies" element={
           <ProtectedRoute>
             <CompanyPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         } />
 
