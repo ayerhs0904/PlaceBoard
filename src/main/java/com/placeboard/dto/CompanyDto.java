@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+import com.placeboard.entity.ApplicationStatus;
 
 @Data
 @Builder
@@ -21,4 +22,5 @@ public class CompanyDto {
     private String packageRange;
     private String bond;
     private String location;
+    private ApplicationStatus currentStatus;
 }

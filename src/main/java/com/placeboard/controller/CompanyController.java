@@ -6,6 +6,8 @@ import com.placeboard.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,16 @@ public class CompanyController {
     @GetMapping
     public ResponseEntity<List<CompanyDto>> getAllCompanies() {
         return ResponseEntity.ok(companyService.getAllCompanies());
+    }
+
+    @GetMapping("/not-applied")
+    public ResponseEntity<List<CompanyDto>> getNotAppliedCompanies(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(companyService.getNotAppliedCompanies(userDetails.getUsername()));
+    }
+
+    @GetMapping("/applied")
+    public ResponseEntity<List<CompanyDto>> getAppliedCompanies(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(companyService.getAppliedCompanies(userDetails.getUsername()));
     }
     
     @PostMapping

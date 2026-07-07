@@ -3,7 +3,11 @@ package com.placeboard.service;
 import com.placeboard.dto.CompanyDto;
 import com.placeboard.dto.CompanyRequestDto;
 import com.placeboard.entity.Company;
+import com.placeboard.entity.Application;
+import com.placeboard.auth.User;
 import com.placeboard.repository.CompanyRepository;
+import com.placeboard.repository.ApplicationRepository;
+import com.placeboard.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +19,33 @@ import java.util.stream.Collectors;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final ApplicationRepository applicationRepository;
+    private final UserRepository userRepository;
 
     public List<CompanyDto> getAllCompanies() {
         return companyRepository.findAll().stream()
                 .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<CompanyDto> getNotAppliedCompanies(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return companyRepository.findAll().stream()
+                .filter(company -> !applicationRepository.existsByUserIdAndCompanyId(user.getId(), company.getId()))
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<CompanyDto> getAppliedCompanies(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return companyRepository.findAll().stream()
+                .filter(company -> applicationRepository.existsByUserIdAndCompanyId(user.getId(), company.getId()))
+                .map(company -> {
+                    CompanyDto dto = mapToDto(company);
+                    applicationRepository.findByUserIdAndCompanyId(user.getId(), company.getId())
+                            .ifPresent(app -> dto.setCurrentStatus(app.getStatus()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
