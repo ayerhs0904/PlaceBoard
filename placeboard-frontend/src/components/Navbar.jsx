@@ -68,13 +68,7 @@ const Navbar = () => {
                                     <p className="text-sm text-gray-500">Signed in as</p>
                                     <p className="text-sm font-medium text-gray-900 truncate">{userName}</p>
                                 </div>
-                                <Link 
-                                    to="/profile" 
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                    onClick={() => setIsProfileDropdownOpen(false)}
-                                >
-                                    Profile
-                                </Link>
+
                                 <button 
                                     onClick={() => {
                                         setIsProfileDropdownOpen(false);
@@ -105,7 +99,7 @@ const Navbar = () => {
                     <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/analytics')}>Analytics</Link>
                     <Link to="/ai" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/ai')}>AI Picks</Link>
                     <Link to="/companies" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/companies')}>Companies</Link>
-                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/profile')}>Profile</Link>
+
                     <button 
                         onClick={handleLogout}
                         className="bg-white text-red-600 px-4 py-2 mt-2 rounded font-bold hover:bg-gray-100 w-full text-center"

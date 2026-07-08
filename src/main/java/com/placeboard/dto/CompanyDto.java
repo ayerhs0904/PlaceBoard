@@ -18,9 +18,7 @@ public class CompanyDto {
     private String jobRole;
     private String jobUrl;
     private String sector;
-    private Double minCgpa;
     private String packageRange;
-    private String bond;
     private String location;
     private ApplicationStatus currentStatus;
 }

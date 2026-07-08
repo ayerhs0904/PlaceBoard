@@ -179,7 +179,7 @@ const AIRecommendPage = () => {
                     <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
                         <div className="text-6xl mb-4">✨</div>
                         <h3 className="text-xl font-bold text-gray-700 mb-2">No recommendations yet</h3>
-                        <p className="text-gray-500 text-lg">Click the button above to get AI recommendations based on your profile.</p>
+                        <p className="text-gray-500 text-lg">Add more companies to get recommendations</p>
                     </div>
                 )}
             </main>

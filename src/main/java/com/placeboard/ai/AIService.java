@@ -42,9 +42,17 @@ public class AIService {
 
         List<Company> companies = companyRepository.findAll();
         
+        if (companies.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        String branch = user.getBranch() != null ? user.getBranch() : "Any";
+        Double cgpa = user.getCgpa() != null ? user.getCgpa() : 0.0;
+        String skills = user.getSkills() != null && !user.getSkills().isEmpty() ? user.getSkills() : "General";
+
         String companiesString = companies.stream()
-                .map(c -> String.format("{name: '%s', sector: '%s', minCgpa: %s, package: '%s'}", 
-                        c.getName(), c.getSector(), c.getMinCgpa(), c.getPackageRange()))
+                .map(c -> String.format("{name: '%s', sector: '%s', package: '%s'}", 
+                        c.getName(), c.getSector(), c.getPackageRange()))
                 .collect(Collectors.joining(", ", "[", "]"));
 
         String prompt = String.format(
@@ -53,12 +61,12 @@ public class AIService {
                 "Suggest top 5 companies as JSON array:\n" +
                 "[{company, sector, reason, matchPercent}]\n" +
                 "Return ONLY JSON, no explanation.",
-                user.getBranch(), user.getCgpa(), user.getSkills(), companiesString
+                branch, cgpa, skills, companiesString
         );
 
-        String response = chatLanguageModel.generate(prompt);
-        
         try {
+            String response = chatLanguageModel.generate(prompt);
+            
             // Clean up possible markdown wrappers around JSON
             if (response.startsWith("```json")) {
                 response = response.substring(7);
@@ -73,7 +81,7 @@ public class AIService {
             }
             return objectMapper.readValue(response.trim(), new TypeReference<List<RecommendationDto>>() {});
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI response", e);
+            return java.util.Collections.emptyList();
         }
     }
 }

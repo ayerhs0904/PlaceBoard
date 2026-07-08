@@ -56,9 +56,7 @@ public class CompanyService {
                 .jobRole(companyRequestDto.getJobRole())
                 .jobUrl(companyRequestDto.getJobUrl())
                 .sector(companyRequestDto.getSector())
-                .minCgpa(companyRequestDto.getMinCgpa())
                 .packageRange(companyRequestDto.getPackageRange())
-                .bond(companyRequestDto.getBond())
                 .location(companyRequestDto.getLocation())
                 .build();
         
@@ -74,9 +72,7 @@ public class CompanyService {
                 .jobRole(company.getJobRole())
                 .jobUrl(company.getJobUrl())
                 .sector(company.getSector())
-                .minCgpa(company.getMinCgpa())
                 .packageRange(company.getPackageRange())
-                .bond(company.getBond())
                 .location(company.getLocation())
                 .build();
     }
