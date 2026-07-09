@@ -22,16 +22,16 @@ public class AIService {
     private final ChatLanguageModel chatLanguageModel;
     private final ObjectMapper objectMapper;
 
-    public AIService(UserRepository userRepository, 
-                     CompanyRepository companyRepository, 
-                     @Value("${groq.api.key}") String groqApiKey,
-                     ObjectMapper objectMapper) {
+    public AIService(UserRepository userRepository,
+            CompanyRepository companyRepository,
+            @Value("${groq.api.key}") String groqApiKey,
+            ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
         this.objectMapper = objectMapper;
         this.chatLanguageModel = OpenAiChatModel.builder()
                 .apiKey(groqApiKey)
-                .modelName("llama3-8b-8192")
+                .modelName("llama-3.3-70b-versatile")
                 .baseUrl("https://api.groq.com/openai/v1")
                 .build();
     }
@@ -41,7 +41,7 @@ public class AIService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Company> companies = companyRepository.findAll();
-        
+
         if (companies.isEmpty()) {
             return java.util.Collections.emptyList();
         }
@@ -51,36 +51,35 @@ public class AIService {
         String skills = user.getSkills() != null && !user.getSkills().isEmpty() ? user.getSkills() : "General";
 
         String companiesString = companies.stream()
-                .map(c -> String.format("{name: '%s', sector: '%s', package: '%s'}", 
-                        c.getName(), c.getSector(), c.getPackageRange()))
+                .map(c -> String.format("{name: '%s', sector: '%s', packageRange: '%s'}",
+                        c.getName(),
+                        c.getSector() != null ? c.getSector() : "IT",
+                        c.getPackageRange() != null ? c.getPackageRange() : "Not specified"))
                 .collect(Collectors.joining(", ", "[", "]"));
-
         String prompt = String.format(
-                "Student profile: branch=%s, cgpa=%s, skills=%s\n" +
-                "Available companies: %s\n" +
-                "Suggest top 5 companies as JSON array:\n" +
-                "[{company, sector, reason, matchPercent}]\n" +
-                "Return ONLY JSON, no explanation.",
-                branch, cgpa, skills, companiesString
-        );
+                "You are a placement advisor. Given this student:\n"
+                + "Branch: %s, CGPA: %s, Skills: %s\n\n"
+                + "Available companies: %s\n\n"
+                + "Return EXACTLY this JSON format, nothing else:\n"
+                + "[{\"company\":\"name\",\"sector\":\"sector\",\"reason\":\"why\",\"matchPercent\":85}]\n"
+                + "Rules:\n"
+                + "- Return ONLY a valid JSON array\n"
+                + "- No markdown, no explanation\n"
+                + "- matchPercent must be a number 0-100\n"
+                + "- Suggest maximum 5 companies",
+                branch, cgpa, skills, companiesString);
 
         try {
             String response = chatLanguageModel.generate(prompt);
-            
+
             // Clean up possible markdown wrappers around JSON
-            if (response.startsWith("```json")) {
-                response = response.substring(7);
-                if (response.endsWith("```")) {
-                    response = response.substring(0, response.length() - 3);
-                }
-            } else if (response.startsWith("```")) {
-                response = response.substring(3);
-                if (response.endsWith("```")) {
-                    response = response.substring(0, response.length() - 3);
-                }
-            }
-            return objectMapper.readValue(response.trim(), new TypeReference<List<RecommendationDto>>() {});
+            response = response.trim().replaceAll("```json", "").replaceAll("```", "").trim();
+            
+            return objectMapper.readValue(response.trim(), new TypeReference<List<RecommendationDto>>() {
+            });
         } catch (Exception e) {
+            System.out.println("AI ERROR: " + e.getMessage());
+            e.printStackTrace();
             return java.util.Collections.emptyList();
         }
     }
