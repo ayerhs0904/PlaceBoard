@@ -8,6 +8,7 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import AIRecommendPage from './pages/AIRecommendPage';
 import CompanyPage from './pages/CompanyPage';
 import ProfilePage from './pages/ProfilePage';
+import ResumeHubPage from './pages/ResumeHubPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AnimatePresence } from 'framer-motion';
 import LandingPage from './pages/LandingPage';
@@ -129,6 +130,11 @@ function App() {
         <Route path="/profile" element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/resume" element={
+          <ProtectedRoute>
+            <ResumeHubPage />
           </ProtectedRoute>
         } />
 

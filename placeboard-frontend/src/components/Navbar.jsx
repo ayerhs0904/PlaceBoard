@@ -53,6 +53,7 @@ const Navbar = () => {
                     <Link to="/analytics" className={isActive('/analytics')}>Analytics</Link>
                     <Link to="/ai" className={isActive('/ai')}>AI Picks</Link>
                     <Link to="/companies" className={isActive('/companies')}>Companies</Link>
+                    <Link to="/resume" className={isActive('/resume')}>Resume</Link>
                     
                     <div className="flex items-center gap-4 ml-4 border-l border-blue-400 pl-4 relative">
                         <button 
@@ -69,6 +70,13 @@ const Navbar = () => {
                                     <p className="text-sm font-medium text-gray-900 truncate">{userName}</p>
                                 </div>
 
+                                <Link 
+                                    to="/profile"
+                                    onClick={() => setIsProfileDropdownOpen(false)}
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                >
+                                    Profile
+                                </Link>
                                 <button 
                                     onClick={() => {
                                         setIsProfileDropdownOpen(false);
@@ -99,6 +107,8 @@ const Navbar = () => {
                     <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/analytics')}>Analytics</Link>
                     <Link to="/ai" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/ai')}>AI Picks</Link>
                     <Link to="/companies" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/companies')}>Companies</Link>
+                    <Link to="/resume" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/resume')}>Resume</Link>
+                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/profile')}>Profile</Link>
 
                     <button 
                         onClick={handleLogout}
