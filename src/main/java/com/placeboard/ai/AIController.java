@@ -22,4 +22,10 @@ public class AIController {
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(aiService.getRecommendations(userDetails.getUsername()));
     }
+
+    @GetMapping("/resume-tips")
+    public ResponseEntity<List<com.placeboard.dto.ResumeTipDto>> resumeTips(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(aiService.resumeTips(userDetails.getUsername()));
+    }
 }

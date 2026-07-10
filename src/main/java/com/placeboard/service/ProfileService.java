@@ -42,6 +42,7 @@ public class ProfileService {
 
     private ProfileDto mapToDto(User user) {
         return ProfileDto.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .branch(user.getBranch())

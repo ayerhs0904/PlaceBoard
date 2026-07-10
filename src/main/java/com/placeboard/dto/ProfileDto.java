@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileDto {
+    private Long id;
     private String name;
     private String email;
     private String branch;

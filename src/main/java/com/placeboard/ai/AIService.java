@@ -14,20 +14,27 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.placeboard.repository.ApplicationRepository;
+import com.placeboard.entity.Application;
+import com.placeboard.dto.ResumeTipDto;
+
 @Service
 public class AIService {
 
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
+    private final ApplicationRepository applicationRepository;
     private final ChatLanguageModel chatLanguageModel;
     private final ObjectMapper objectMapper;
 
     public AIService(UserRepository userRepository,
             CompanyRepository companyRepository,
+            ApplicationRepository applicationRepository,
             @Value("${groq.api.key}") String groqApiKey,
             ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
+        this.applicationRepository = applicationRepository;
         this.objectMapper = objectMapper;
         this.chatLanguageModel = OpenAiChatModel.builder()
                 .apiKey(groqApiKey)
@@ -76,6 +83,59 @@ public class AIService {
             response = response.trim().replaceAll("```json", "").replaceAll("```", "").trim();
             
             return objectMapper.readValue(response.trim(), new TypeReference<List<RecommendationDto>>() {
+            });
+        } catch (Exception e) {
+            System.out.println("AI ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return java.util.Collections.emptyList();
+        }
+    }
+
+    public List<ResumeTipDto> resumeTips(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Application> applications = applicationRepository.findByUserId(user.getId());
+        
+        String branch = user.getBranch() != null ? user.getBranch() : "Any";
+        Double cgpa = user.getCgpa() != null ? user.getCgpa() : 0.0;
+        String skills = user.getSkills() != null && !user.getSkills().isEmpty() ? user.getSkills() : "None";
+
+        String rolesString = "General Tips";
+        if (applications != null && !applications.isEmpty()) {
+            rolesString = applications.stream()
+                    .filter(a -> a.getCompany() != null && a.getRole() != null)
+                    .map(a -> a.getCompany().getName() + " - " + a.getRole())
+                    .distinct()
+                    .collect(Collectors.joining(", "));
+            if (rolesString.isEmpty()) {
+                rolesString = "General Tips";
+            }
+        }
+
+        String prompt = String.format(
+                "Student: branch=%s, cgpa=%s, skills=%s\n"
+                + "Applied roles: %s\n\n"
+                + "Give exactly 5 resume improvement tips.\n"
+                + "Return ONLY this JSON, nothing else:\n"
+                + "[{\"tip\":\"Add Spring Boot projects\",\"priority\":\"HIGH\",\"category\":\"Skills\"}]\n\n"
+                + "priority values: HIGH, MEDIUM, LOW\n"
+                + "category values: Skills, Projects, Experience, Format, Links",
+                branch, cgpa, skills, rolesString);
+
+        try {
+            String response = chatLanguageModel.generate(prompt);
+            
+            int startIndex = response.indexOf("[");
+            int endIndex = response.lastIndexOf("]");
+            
+            if (startIndex != -1 && endIndex != -1 && endIndex >= startIndex) {
+                response = response.substring(startIndex, endIndex + 1);
+            } else {
+                response = "[]";
+            }
+            
+            return objectMapper.readValue(response, new com.fasterxml.jackson.core.type.TypeReference<List<ResumeTipDto>>() {
             });
         } catch (Exception e) {
             System.out.println("AI ERROR: " + e.getMessage());
