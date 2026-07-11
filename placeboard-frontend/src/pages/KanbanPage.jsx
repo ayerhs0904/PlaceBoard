@@ -93,14 +93,14 @@ const KanbanPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#050510] text-white">
       <Navbar />
       <div className="max-w-[1400px] mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">My Applications</h1>
+          <h1 className="text-3xl font-bold text-white">My Applications</h1>
           <button
             onClick={handleOpenModal}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
+            className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-xl shadow"
           >
             + Add Application
           </button>
@@ -109,10 +109,10 @@ const KanbanPage = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex gap-6 overflow-x-auto pb-4 min-h-[600px] items-start">
             {COLUMNS.map(column => (
-              <div key={column.id} className="w-80 flex-shrink-0 bg-gray-100 rounded-lg p-4 flex flex-col h-full min-h-[500px]">
-                <div className={`${column.color} text-white font-bold px-3 py-2 rounded mb-4 flex justify-between`}>
+              <div key={column.id} className="w-80 flex-shrink-0 bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col h-full min-h-[500px]">
+                <div className={`${column.color} text-white font-bold px-3 py-2 rounded-xl mb-4 flex justify-between`}>
                   {column.title}
-                  <span className="bg-white text-gray-800 px-2 rounded-full text-sm flex items-center">
+                  <span className="bg-black/20 text-white px-2 rounded-full text-sm flex items-center">
                     {applications.filter(a => a.status === column.id).length}
                   </span>
                 </div>
@@ -134,17 +134,17 @@ const KanbanPage = () => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                                 onClick={() => setSelectedApp(app)}
-                                className="bg-white p-4 rounded-lg shadow mb-3 cursor-pointer border border-gray-200 hover:shadow-md"
+                                className="bg-white/5 p-4 rounded-xl shadow mb-3 cursor-pointer border border-white/10 hover:bg-white/10 transition-colors"
                               >
-                                <h3 className="font-bold text-gray-900 mb-1">
+                                <h3 className="font-bold text-white mb-1">
                                   {app.companyName || 'Unknown Company'}
                                 </h3>
                                 {app.role && (
-                                  <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded inline-block mb-2">
+                                  <span className="text-xs bg-violet-900/50 text-violet-300 px-2 py-1 rounded inline-block mb-2 border border-violet-500/30">
                                     {app.role}
                                   </span>
                                 )}
-                                <div className="text-xs text-gray-500 mt-2">
+                                <div className="text-xs text-slate-400 mt-2">
                                   Applied: {new Date(app.appliedDate).toLocaleDateString()}
                                 </div>
                               </div>
@@ -163,17 +163,17 @@ const KanbanPage = () => {
 
       {/* Add Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[#0f0f1a] border border-white/10 rounded-2xl shadow-xl max-w-md w-full p-6 text-white">
             <h2 className="text-2xl font-bold mb-4">Add Application</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Company *</label>
+                <label className="block text-sm font-medium text-slate-300">Company *</label>
                 <select
                   required
                   value={formData.companyId}
                   onChange={(e) => setFormData({ ...formData, companyId: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                  className="mt-1 block w-full rounded-xl bg-white/5 border-white/10 shadow-sm focus:border-violet-500 focus:ring-violet-500 border p-2 text-white [&>option]:text-black"
                 >
                   <option value="" disabled>Select a company</option>
                   {companies.map(c => (
@@ -181,18 +181,18 @@ const KanbanPage = () => {
                   ))}
                 </select>
                 {companies.length === 0 && (
-                  <p className="text-xs text-red-500 mt-1">
+                  <p className="text-xs text-red-400 mt-1">
                     No available companies. Add a company first!
                   </p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Notes (Optional)</label>
+                <label className="block text-sm font-medium text-slate-300">Notes (Optional)</label>
                 <textarea
                   rows="3"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                  className="mt-1 block w-full rounded-xl bg-white/5 border-white/10 shadow-sm focus:border-violet-500 focus:ring-violet-500 border p-2 text-white placeholder-slate-500"
                   placeholder="Any details..."
                 />
               </div>
@@ -200,13 +200,13 @@ const KanbanPage = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                  className="px-4 py-2 bg-white/10 text-white rounded-xl hover:bg-white/20 border border-white/10 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-colors"
                   disabled={companies.length === 0}
                 >
                   Submit
@@ -219,20 +219,20 @@ const KanbanPage = () => {
 
       {/* Details Modal */}
       {selectedApp && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[#0f0f1a] border border-white/10 rounded-2xl shadow-xl max-w-md w-full p-6 text-white">
             <h2 className="text-2xl font-bold mb-2">{selectedApp.companyName}</h2>
             {selectedApp.role && (
-              <p className="text-purple-600 font-medium mb-4">{selectedApp.role}</p>
+              <p className="text-violet-400 font-medium mb-4">{selectedApp.role}</p>
             )}
             
-            <div className="space-y-3 text-sm text-gray-700">
-              <p><strong>Status:</strong> {selectedApp.status}</p>
-              <p><strong>Applied On:</strong> {new Date(selectedApp.appliedDate).toLocaleDateString()}</p>
+            <div className="space-y-3 text-sm text-slate-300">
+              <p><strong className="text-white">Status:</strong> {selectedApp.status}</p>
+              <p><strong className="text-white">Applied On:</strong> {new Date(selectedApp.appliedDate).toLocaleDateString()}</p>
               {selectedApp.notes && (
                 <div>
-                  <strong className="block mb-1">Notes:</strong>
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200">{selectedApp.notes}</div>
+                  <strong className="block mb-1 text-white">Notes:</strong>
+                  <div className="bg-white/5 p-3 rounded-xl border border-white/10">{selectedApp.notes}</div>
                 </div>
               )}
             </div>
@@ -240,7 +240,7 @@ const KanbanPage = () => {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setSelectedApp(null)}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                className="px-4 py-2 bg-white/10 text-white rounded-xl hover:bg-white/20 border border-white/10 transition-colors"
               >
                 Close
               </button>

@@ -99,19 +99,19 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-[#050510] flex text-white">
       {/* Left Side - Brand / Graphic */}
-      <div className="hidden lg:flex lg:w-1/3 xl:w-2/5 bg-gradient-to-br from-indigo-800 via-blue-700 to-blue-500 text-white flex-col justify-between p-12 relative overflow-hidden fixed h-screen">
+      <div className="hidden lg:flex lg:w-1/3 xl:w-2/5 bg-[#050510] border-r border-white/10 flex-col justify-between p-12 relative overflow-hidden fixed h-screen">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
-          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-white blur-3xl"></div>
-          <div className="absolute bottom-1/4 -right-20 w-72 h-72 rounded-full bg-blue-300 blur-3xl"></div>
+          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-violet-600 blur-3xl"></div>
+          <div className="absolute bottom-1/4 -right-20 w-72 h-72 rounded-full bg-indigo-600 blur-3xl"></div>
         </div>
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center space-x-2">
-            <Briefcase size={32} className="text-white" />
-            <span className="text-3xl font-extrabold tracking-tight">PlaceBoard</span>
+            <Briefcase size={32} className="text-violet-500" />
+            <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">PlaceBoard</span>
           </Link>
         </div>
 
@@ -134,18 +134,18 @@ function RegisterPage() {
           </motion.p>
         </div>
 
-        <div className="relative z-10 text-sm text-blue-200">
+        <div className="relative z-10 text-sm text-slate-400">
           &copy; {new Date().getFullYear()} PlaceBoard. All rights reserved.
         </div>
       </div>
 
       {/* Right Side - Form Container */}
       <div className="w-full lg:w-2/3 xl:w-3/5 lg:ml-auto flex flex-col justify-center min-h-screen p-6 sm:p-10 lg:p-12 overflow-y-auto">
-        <div className="w-full max-w-2xl mx-auto">
+        <div className="w-full max-w-2xl mx-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-xl">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center space-x-2 mb-8">
-            <Briefcase size={32} className="text-blue-600" />
-            <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">PlaceBoard</span>
+            <Briefcase size={32} className="text-violet-500" />
+            <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">PlaceBoard</span>
           </div>
 
           <motion.div 
@@ -154,8 +154,8 @@ function RegisterPage() {
             transition={{ duration: 0.5 }}
             className="mb-8 text-center lg:text-left"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Create an account</h2>
-            <p className="text-gray-500">Let's get you set up so you can start tracking applications.</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Create an account</h2>
+            <p className="text-slate-400">Let's get you set up so you can start tracking applications.</p>
           </motion.div>
 
           <motion.form 
@@ -168,101 +168,101 @@ function RegisterPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Full Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
+                    <User className="h-5 w-5 text-slate-400" />
                   </div>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-2.5 border ${errors.name ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none transition-colors bg-gray-50 focus:bg-white`}
+                    className={`block w-full pl-10 pr-3 py-2.5 border ${errors.name ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                     placeholder="John Doe"
                   />
                 </div>
-                {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+                {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Email address</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <Mail className="h-5 w-5 text-slate-400" />
                   </div>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-2.5 border ${errors.email ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none transition-colors bg-gray-50 focus:bg-white`}
+                    className={`block w-full pl-10 pr-3 py-2.5 border ${errors.email ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                     placeholder="you@example.com"
                   />
                 </div>
-                {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+                {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`block w-full pl-10 pr-10 py-2.5 border ${errors.password ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none transition-colors bg-gray-50 focus:bg-white`}
+                  className={`block w-full pl-10 pr-10 py-2.5 border ${errors.password ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password}</p>}
+              {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password}</p>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* College */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">College / University</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">College / University</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Building className="h-5 w-5 text-gray-400" />
+                    <Building className="h-5 w-5 text-slate-400" />
                   </div>
                   <input
                     type="text"
                     name="college"
                     value={formData.college}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-2.5 border ${errors.college ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none transition-colors bg-gray-50 focus:bg-white`}
+                    className={`block w-full pl-10 pr-3 py-2.5 border ${errors.college ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                     placeholder="XYZ Institute"
                   />
                 </div>
-                {errors.college && <p className="mt-1 text-xs text-red-600">{errors.college}</p>}
+                {errors.college && <p className="mt-1 text-xs text-red-400">{errors.college}</p>}
               </div>
 
               {/* Branch */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Branch</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Branch</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <GraduationCap className="h-5 w-5 text-gray-400" />
+                    <GraduationCap className="h-5 w-5 text-slate-400" />
                   </div>
                   <select
                     name="branch"
                     value={formData.branch}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-10 py-2.5 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-lg shadow-sm bg-gray-50 focus:bg-white"
+                    className="block w-full pl-10 pr-10 py-2.5 text-base border border-white/20 focus:outline-none focus:ring-violet-500 focus:border-violet-500 rounded-xl shadow-sm bg-white/10 text-white [&>option]:text-black"
                   >
                     <option value="CSE">Computer Science</option>
                     <option value="IT">Information Tech</option>
@@ -277,8 +277,8 @@ function RegisterPage() {
             {/* CGPA Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="block text-sm font-medium text-gray-700">Cumulative GPA</label>
-                <span className="text-lg font-bold text-blue-600 bg-blue-50 px-3 py-0.5 rounded-full border border-blue-100">{formData.cgpa.toFixed(2)}</span>
+                <label className="block text-sm font-medium text-slate-300">Cumulative GPA</label>
+                <span className="text-lg font-bold text-violet-400 bg-violet-900/30 px-3 py-0.5 rounded-full border border-violet-500/30">{formData.cgpa.toFixed(2)}</span>
               </div>
               <input 
                 type="range" 
@@ -287,9 +287,9 @@ function RegisterPage() {
                 step="0.01" 
                 value={formData.cgpa} 
                 onChange={handleCgpaChange} 
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500" 
               />
-              <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <div className="flex justify-between text-xs text-slate-500 mt-1">
                 <span>0.0</span>
                 <span>10.0</span>
               </div>
@@ -297,14 +297,14 @@ function RegisterPage() {
 
             {/* Skills Tag Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Skills</label>
-              <div className="relative border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus-within:bg-white focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-colors p-2 flex flex-wrap gap-2 items-center">
-                <Code className="h-5 w-5 text-gray-400 ml-1 flex-shrink-0" />
+              <label className="block text-sm font-medium text-slate-300 mb-1">Skills</label>
+              <div className="relative border border-white/20 rounded-xl shadow-sm bg-white/10 focus-within:border-violet-500 focus-within:ring-1 focus-within:ring-violet-500 transition-colors p-2 flex flex-wrap gap-2 items-center">
+                <Code className="h-5 w-5 text-slate-400 ml-1 flex-shrink-0" />
                 
                 {formData.skills.map((skill, index) => (
-                  <span key={index} className="flex items-center text-sm font-medium bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-200">
+                  <span key={index} className="flex items-center text-sm font-medium bg-violet-900/50 text-violet-300 px-2.5 py-1 rounded-full border border-violet-500/30">
                     {skill}
-                    <button type="button" onClick={() => removeSkill(skill)} className="ml-1.5 text-indigo-500 hover:text-indigo-800 focus:outline-none">
+                    <button type="button" onClick={() => removeSkill(skill)} className="ml-1.5 text-violet-400 hover:text-violet-200 focus:outline-none">
                       <X size={14} />
                     </button>
                   </span>
@@ -316,17 +316,17 @@ function RegisterPage() {
                   onChange={(e) => setCurrentSkill(e.target.value)}
                   onKeyDown={handleSkillKeyDown}
                   placeholder={formData.skills.length === 0 ? "Type a skill and press Enter" : "Add another..."}
-                  className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-1 min-w-[150px] focus:outline-none"
+                  className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-1 min-w-[150px] focus:outline-none text-white placeholder-slate-500"
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-500">Press Enter to add tags.</p>
+              <p className="mt-1 text-xs text-slate-500">Press Enter to add tags.</p>
             </div>
 
             <div className="pt-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transform transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
@@ -341,8 +341,8 @@ function RegisterPage() {
           </motion.form>
 
           <div className="mt-8 text-center text-sm">
-            <span className="text-gray-600">Already have an account? </span>
-            <Link to="/login" className="font-bold text-blue-600 hover:text-indigo-600 transition-colors">
+            <span className="text-slate-400">Already have an account? </span>
+            <Link to="/login" className="font-bold text-violet-400 hover:text-violet-300 transition-colors">
               Sign in here
             </Link>
           </div>

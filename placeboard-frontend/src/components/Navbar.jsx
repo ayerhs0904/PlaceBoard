@@ -35,14 +35,16 @@ const Navbar = () => {
     };
 
     const isActive = (path) => {
-        return location.pathname === path ? "text-white font-bold border-b-2 border-white pb-1" : "text-blue-100 hover:text-white transition-colors pb-1";
+        return location.pathname === path 
+            ? "text-white font-semibold pb-1" 
+            : "text-slate-300 hover:text-white transition-colors pb-1";
     };
 
     return (
-        <nav className="bg-blue-600 p-4 shadow-md sticky top-0 z-50">
+        <nav className="bg-[#050510]/80 backdrop-blur border-b border-white/10 sticky top-0 z-50 p-4">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 <div className="font-extrabold text-2xl tracking-tight">
-                    <Link to="/dashboard" className="bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent drop-shadow-sm">
+                    <Link to="/dashboard" className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent drop-shadow-sm">
                         PlaceBoard
                     </Link>
                 </div>
@@ -55,25 +57,25 @@ const Navbar = () => {
                     <Link to="/companies" className={isActive('/companies')}>Companies</Link>
                     <Link to="/resume" className={isActive('/resume')}>Resume</Link>
                     
-                    <div className="flex items-center gap-4 ml-4 border-l border-blue-400 pl-4 relative">
+                    <div className="flex items-center gap-4 ml-4 border-l border-white/10 pl-4 relative">
                         <button 
                             onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                            className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-blue-700 font-bold hover:bg-blue-50 transition-colors shadow-sm focus:outline-none"
+                            className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold hover:opacity-90 transition-opacity shadow-sm focus:outline-none"
                         >
                             {getInitials(userName)}
                         </button>
                         
                         {isProfileDropdownOpen && (
-                            <div className="absolute top-12 right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
-                                <div className="px-4 py-2 border-b border-gray-100">
-                                    <p className="text-sm text-gray-500">Signed in as</p>
-                                    <p className="text-sm font-medium text-gray-900 truncate">{userName}</p>
+                            <div className="absolute top-12 right-0 mt-2 w-48 bg-[#050510] border border-white/10 rounded-xl shadow-lg py-1 z-50">
+                                <div className="px-4 py-2 border-b border-white/10">
+                                    <p className="text-sm text-slate-400">Signed in as</p>
+                                    <p className="text-sm font-medium text-white truncate">{userName}</p>
                                 </div>
 
                                 <Link 
                                     to="/profile"
                                     onClick={() => setIsProfileDropdownOpen(false)}
-                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="block w-full text-left px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
                                 >
                                     Profile
                                 </Link>
@@ -82,7 +84,7 @@ const Navbar = () => {
                                         setIsProfileDropdownOpen(false);
                                         handleLogout();
                                     }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                    className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors"
                                 >
                                     Logout
                                 </button>
@@ -101,8 +103,8 @@ const Navbar = () => {
 
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
-                <div className="md:hidden mt-4 bg-blue-700 rounded-lg p-4 flex flex-col gap-4 shadow-inner">
-                    {userName && <span className="text-blue-100 font-medium pb-2 border-b border-blue-500">Welcome, {userName}</span>}
+                <div className="md:hidden mt-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col gap-4 shadow-inner">
+                    {userName && <span className="text-slate-300 font-medium pb-2 border-b border-white/10">Welcome, {userName}</span>}
                     <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/dashboard')}>Dashboard</Link>
                     <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/analytics')}>Analytics</Link>
                     <Link to="/ai" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/ai')}>AI Picks</Link>
@@ -112,7 +114,7 @@ const Navbar = () => {
 
                     <button 
                         onClick={handleLogout}
-                        className="bg-white text-red-600 px-4 py-2 mt-2 rounded font-bold hover:bg-gray-100 w-full text-center"
+                        className="bg-white/10 border border-white/20 text-red-400 px-4 py-2 mt-2 rounded-xl font-bold hover:bg-white/20 w-full text-center"
                     >
                         Logout
                     </button>

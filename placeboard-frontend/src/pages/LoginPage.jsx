@@ -50,19 +50,19 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-[#050510] flex text-white">
       {/* Left Side - Brand / Graphic */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#050510] flex-col justify-between p-12 relative overflow-hidden border-r border-white/10">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-white blur-3xl"></div>
-          <div className="absolute top-1/2 -left-20 w-72 h-72 rounded-full bg-blue-400 blur-3xl"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-violet-600 blur-3xl"></div>
+          <div className="absolute top-1/2 -left-20 w-72 h-72 rounded-full bg-indigo-600 blur-3xl"></div>
         </div>
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center space-x-2">
-            <Briefcase size={32} className="text-white" />
-            <span className="text-3xl font-extrabold tracking-tight">PlaceBoard</span>
+            <Briefcase size={32} className="text-violet-500" />
+            <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">PlaceBoard</span>
           </Link>
         </div>
 
@@ -85,18 +85,18 @@ function LoginPage() {
           </motion.p>
         </div>
 
-        <div className="relative z-10 text-sm text-blue-200">
+        <div className="relative z-10 text-sm text-slate-400">
           &copy; {new Date().getFullYear()} PlaceBoard. All rights reserved.
         </div>
       </div>
 
       {/* Right Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-16 relative">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-xl">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center space-x-2 mb-10">
-            <Briefcase size={32} className="text-blue-600" />
-            <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">PlaceBoard</span>
+            <Briefcase size={32} className="text-violet-500" />
+            <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">PlaceBoard</span>
           </div>
 
           <motion.div 
@@ -105,8 +105,8 @@ function LoginPage() {
             transition={{ duration: 0.5 }}
             className="mb-10 text-center lg:text-left"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
-            <p className="text-gray-500">Please enter your details to sign in.</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Welcome back</h2>
+            <p className="text-slate-400">Please enter your details to sign in.</p>
           </motion.div>
 
           <motion.form 
@@ -117,10 +117,10 @@ function LoginPage() {
             className="space-y-6"
           >
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type="email"
@@ -129,18 +129,18 @@ function LoginPage() {
                     setEmail(e.target.value);
                     if (errors.email) setErrors({ ...errors, email: null });
                   }}
-                  className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none transition-colors bg-gray-50 focus:bg-white`}
+                  className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-400 focus:ring-red-500 focus:border-red-500' : 'border-white/20 focus:ring-violet-500 focus:border-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                   placeholder="Enter your email"
                 />
               </div>
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+              {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -149,18 +149,18 @@ function LoginPage() {
                     setPassword(e.target.value);
                     if (errors.password) setErrors({ ...errors, password: null });
                   }}
-                  className={`block w-full pl-10 pr-10 py-3 border ${errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none transition-colors bg-gray-50 focus:bg-white`}
+                  className={`block w-full pl-10 pr-10 py-3 border ${errors.password ? 'border-red-400 focus:ring-red-500 focus:border-red-500' : 'border-white/20 focus:ring-violet-500 focus:border-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+              {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
             </div>
 
             <div className="flex items-center justify-between">
@@ -171,9 +171,9 @@ function LoginPage() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                  className="h-4 w-4 text-violet-600 focus:ring-violet-500 bg-white/10 border-white/20 rounded cursor-pointer"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300 cursor-pointer">
                   Remember me
                 </label>
               </div>
@@ -182,7 +182,7 @@ function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transform transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -196,8 +196,8 @@ function LoginPage() {
           </motion.form>
 
           <div className="mt-8 text-center text-sm">
-            <span className="text-gray-600">Don't have an account? </span>
-            <Link to="/register" className="font-bold text-blue-600 hover:text-indigo-600 transition-colors">
+            <span className="text-slate-400">Don't have an account? </span>
+            <Link to="/register" className="font-bold text-violet-400 hover:text-violet-300 transition-colors">
               Sign up for free
             </Link>
           </div>
