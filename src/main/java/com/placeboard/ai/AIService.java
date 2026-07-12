@@ -151,24 +151,38 @@ public class AIService {
 
         String branch = user.getBranch() != null ? user.getBranch() : "Any";
         String skills = user.getSkills() != null && !user.getSkills().isEmpty() ? user.getSkills() : "None";
+        Double cgpa = user.getCgpa() != null ? user.getCgpa() : 0.0;
 
-        String prompt = String.format(
-                "Job Role: %s\n"
-                + "Student Skills: %s\n"
-                + "Branch: %s\n\n"
-                + "Analyze if this student is suitable for %s.\n"
-                + "Return ONLY this JSON:\n"
-                + "{\n"
-                + "  \"matchScore\": 75,\n"
-                + "  \"missingSkills\": [\"Python\",\"Machine Learning\"],\n"
-                + "  \"presentSkills\": [\"SQL\",\"Excel\"],\n"
-                + "  \"suggestions\": [\n"
-                + "    {\"tip\": \"Learn Python basics\", \"priority\": \"HIGH\"},\n"
-                + "    {\"tip\": \"Add projects\", \"priority\": \"MEDIUM\"}\n"
-                + "  ]\n"
-                + "}\n"
-                + "Return ONLY valid JSON nothing else.",
-                jobRole, skills, branch, jobRole);
+        String prompt = "You are a technical recruiter.\n\n" +
+                "Job Role: " + jobRole + "\n" +
+                "Student Skills: " + skills + "\n" +
+                "Branch: " + branch + "\n" +
+                "CGPA: " + cgpa + "\n\n" +
+                "Task: Analyze ONLY the technical skills " +
+                "specifically required for " + jobRole + ".\n" +
+                "Do NOT suggest unrelated skills.\n" +
+                "For example: Java Backend needs Java, Spring Boot, " +
+                "SQL, REST APIs - NOT Python or ML.\n\n" +
+                "Check which required skills student has and " +
+                "which are missing.\n\n" +
+                "Return ONLY this JSON, nothing else:\n" +
+                "{\n" +
+                "\"matchScore\": 75,\n" +
+                "\"presentSkills\": [\"Java\", \"SQL\"],\n" +
+                "\"missingSkills\": [\"Docker\", \"Microservices\"],\n" +
+                "\"suggestions\": [\n" +
+                "{\"tip\": \"Learn Docker basics\", " +
+                "\"priority\": \"HIGH\"},\n" +
+                "{\"tip\": \"Build REST API project\", " +
+                "\"priority\": \"MEDIUM\"}\n" +
+                "]\n" +
+                "}\n\n" +
+                "Rules:\n" +
+                "1. Only suggest skills relevant to " + jobRole + "\n" +
+                "2. matchScore = percentage of required skills student has\n" +
+                "3. Return ONLY valid JSON\n" +
+                "4. Maximum 5 missing skills\n" +
+                "5. Maximum 3 suggestions";
 
         try {
             String response = chatLanguageModel.generate(prompt);
