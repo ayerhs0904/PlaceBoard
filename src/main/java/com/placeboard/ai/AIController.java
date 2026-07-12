@@ -5,8 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.placeboard.dto.ResumeAnalysisDto;
+import com.placeboard.dto.ResumeAnalysisRequest;
 
 import java.util.List;
 
@@ -27,5 +31,12 @@ public class AIController {
     public ResponseEntity<List<com.placeboard.dto.ResumeTipDto>> resumeTips(
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(aiService.resumeTips(userDetails.getUsername()));
+    }
+
+    @PostMapping("/resume-analysis")
+    public ResponseEntity<ResumeAnalysisDto> analyzeResume(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody ResumeAnalysisRequest request) {
+        return ResponseEntity.ok(aiService.analyzeResume(userDetails.getUsername(), request.getJobRole()));
     }
 }

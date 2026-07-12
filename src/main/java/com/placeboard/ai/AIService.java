@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import com.placeboard.repository.ApplicationRepository;
 import com.placeboard.entity.Application;
 import com.placeboard.dto.ResumeTipDto;
+import com.placeboard.dto.ResumeAnalysisDto;
 
 @Service
 public class AIService {
@@ -141,6 +142,56 @@ public class AIService {
             System.out.println("AI ERROR: " + e.getMessage());
             e.printStackTrace();
             return java.util.Collections.emptyList();
+        }
+    }
+
+    public ResumeAnalysisDto analyzeResume(String email, String jobRole) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String branch = user.getBranch() != null ? user.getBranch() : "Any";
+        String skills = user.getSkills() != null && !user.getSkills().isEmpty() ? user.getSkills() : "None";
+
+        String prompt = String.format(
+                "Job Role: %s\n"
+                + "Student Skills: %s\n"
+                + "Branch: %s\n\n"
+                + "Analyze if this student is suitable for %s.\n"
+                + "Return ONLY this JSON:\n"
+                + "{\n"
+                + "  \"matchScore\": 75,\n"
+                + "  \"missingSkills\": [\"Python\",\"Machine Learning\"],\n"
+                + "  \"presentSkills\": [\"SQL\",\"Excel\"],\n"
+                + "  \"suggestions\": [\n"
+                + "    {\"tip\": \"Learn Python basics\", \"priority\": \"HIGH\"},\n"
+                + "    {\"tip\": \"Add projects\", \"priority\": \"MEDIUM\"}\n"
+                + "  ]\n"
+                + "}\n"
+                + "Return ONLY valid JSON nothing else.",
+                jobRole, skills, branch, jobRole);
+
+        try {
+            String response = chatLanguageModel.generate(prompt);
+            
+            int startIndex = response.indexOf("{");
+            int endIndex = response.lastIndexOf("}");
+            
+            if (startIndex != -1 && endIndex != -1 && endIndex >= startIndex) {
+                response = response.substring(startIndex, endIndex + 1);
+            } else {
+                response = "{\"matchScore\":0,\"missingSkills\":[],\"presentSkills\":[],\"suggestions\":[]}";
+            }
+            
+            return objectMapper.readValue(response, ResumeAnalysisDto.class);
+        } catch (Exception e) {
+            System.out.println("AI ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return ResumeAnalysisDto.builder()
+                    .matchScore(0)
+                    .missingSkills(List.of())
+                    .presentSkills(List.of())
+                    .suggestions(List.of())
+                    .build();
         }
     }
 }

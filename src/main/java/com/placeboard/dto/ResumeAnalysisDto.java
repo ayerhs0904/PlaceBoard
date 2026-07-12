@@ -1,0 +1,19 @@
+package com.placeboard.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResumeAnalysisDto {
+    private int matchScore;
+    private List<String> missingSkills;
+    private List<String> presentSkills;
+    private List<ResumeTipDto> suggestions;
+}
