@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-import { User, Mail, BookOpen, Award, Link as LinkIcon, Code, Briefcase, FileText, Globe, Phone, FileSignature, Edit2, Save, X, Copy } from 'lucide-react';
+import { User, Mail, BookOpen, Award, Link as LinkIcon, Code, Briefcase, FileText, Globe, Phone, FileSignature, Edit2, Save, X, Copy, Plus, Trash2 } from 'lucide-react';
 
 // ✅ ProfileField is OUTSIDE ProfilePage — fixes cursor focus loss
 const ProfileField = ({ icon: Icon, label, value, fieldKey, isEditing, editForm, setEditForm, handleCopy }) => (
@@ -46,24 +46,95 @@ const ProfileField = ({ icon: Icon, label, value, fieldKey, isEditing, editForm,
     </div>
 );
 
+const ProjectRow = ({ project, index, isEditing, onChange, onRemove, handleCopy }) => (
+    <div className="flex items-start p-3 hover:bg-white/5 rounded-xl transition-colors group mb-2">
+        <div className="bg-violet-900/30 p-2 rounded-xl mr-4 border border-violet-500/20">
+            <Code size={20} className="text-violet-400" />
+        </div>
+        <div className="flex-1 min-w-0">
+            {isEditing ? (
+                <div className="flex flex-col gap-2 w-full">
+                    <input
+                        type="text"
+                        value={project.projectName || ''}
+                        onChange={(e) => onChange(index, 'projectName', e.target.value)}
+                        className="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-xl focus:ring-violet-500 focus:border-violet-500 text-white placeholder-slate-500 outline-none"
+                        placeholder="Project Name"
+                        autoComplete="off"
+                    />
+                    <div className="flex gap-2">
+                        <input
+                            type="url"
+                            value={project.projectLink || ''}
+                            onChange={(e) => onChange(index, 'projectLink', e.target.value)}
+                            className="flex-1 px-3 py-1.5 bg-white/10 border border-white/20 rounded-xl focus:ring-violet-500 focus:border-violet-500 text-white placeholder-slate-500 outline-none"
+                            placeholder="https://..."
+                            autoComplete="off"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => onRemove(index)}
+                            className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 rounded-xl transition-colors"
+                            title="Remove Project"
+                        >
+                            <Trash2 size={18} />
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex flex-col mt-1">
+                    <p className="text-sm font-medium text-slate-400">{project.projectName || 'Unnamed Project'}</p>
+                    <div className="flex items-center gap-2">
+                        {project.projectLink ? (
+                            <a href={project.projectLink} target="_blank" rel="noopener noreferrer" className="text-base font-semibold text-violet-400 hover:text-violet-300 truncate underline">
+                                {project.projectLink}
+                            </a>
+                        ) : (
+                            <span className="text-slate-500 font-normal italic">No link provided</span>
+                        )}
+                        {project.projectLink && (
+                            <button
+                                onClick={() => handleCopy(project.projectLink, project.projectName || 'Project Link')}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-slate-500 hover:text-violet-400 bg-white/5 rounded-lg"
+                                title="Copy"
+                            >
+                                <Copy size={14} />
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    </div>
+);
+
 const ProfilePage = () => {
     const [profile, setProfile] = useState(null);
+    const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({});
+    const [editProjects, setEditProjects] = useState([]);
+    const [deletedProjects, setDeletedProjects] = useState([]);
 
     useEffect(() => {
-        fetchProfile();
+        fetchProfileAndProjects();
     }, []);
 
-    const fetchProfile = async () => {
+    const fetchProfileAndProjects = async () => {
         try {
             setLoading(true);
-            const response = await api.get('/api/profile');
-            setProfile(response.data);
-            setEditForm(response.data);
+            const [profileRes, projectsRes] = await Promise.all([
+                api.get('/api/profile'),
+                api.get('/api/profile/projects')
+            ]);
+            setProfile(profileRes.data);
+            setEditForm(profileRes.data);
+            setProjects(projectsRes.data);
+            setEditProjects(projectsRes.data);
+            setDeletedProjects([]);
         } catch (error) {
-            toast.error('Failed to fetch profile');
+            toast.error('Failed to fetch profile data');
             console.error(error);
         } finally {
             setLoading(false);
@@ -76,16 +147,70 @@ const ProfilePage = () => {
         toast.success(`Copied ${fieldName}!`);
     };
 
+    const isValidUrl = (urlStr) => {
+        try {
+            new URL(urlStr);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
+        
+        for (const proj of editProjects) {
+            if (proj.projectLink && !isValidUrl(proj.projectLink)) {
+                toast.error(`Invalid URL for project: ${proj.projectName || 'Unnamed'}`);
+                return;
+            }
+        }
+
         try {
-            const response = await api.put('/api/profile', editForm);
-            setProfile(response.data);
+            const profileResponse = await api.put('/api/profile', editForm);
+            setProfile(profileResponse.data);
+
+            const deletePromises = deletedProjects.map(id => api.delete(`/api/profile/projects/${id}`));
+            await Promise.all(deletePromises);
+
+            const projectPromises = editProjects.map(proj => {
+                if (proj.id) {
+                    return api.put(`/api/profile/projects/${proj.id}`, proj);
+                } else {
+                    return api.post('/api/profile/projects', proj);
+                }
+            });
+            await Promise.all(projectPromises);
+
+            const projectsRes = await api.get('/api/profile/projects');
+            setProjects(projectsRes.data);
+            setEditProjects(projectsRes.data);
+            setDeletedProjects([]);
+
             setIsEditing(false);
             toast.success('Profile updated successfully!');
         } catch (error) {
             toast.error('Failed to update profile');
         }
+    };
+
+    const handleProjectChange = (index, field, value) => {
+        const newProjects = [...editProjects];
+        newProjects[index] = { ...newProjects[index], [field]: value };
+        setEditProjects(newProjects);
+    };
+
+    const handleAddProject = () => {
+        setEditProjects([...editProjects, { projectName: '', projectLink: '' }]);
+    };
+
+    const handleRemoveProject = (index) => {
+        const proj = editProjects[index];
+        if (proj.id) {
+            setDeletedProjects([...deletedProjects, proj.id]);
+        }
+        const newProjects = editProjects.filter((_, i) => i !== index);
+        setEditProjects(newProjects);
     };
 
     const getInitials = (name) => {
@@ -168,6 +293,8 @@ const ProfilePage = () => {
                                         onClick={() => {
                                             setIsEditing(false);
                                             setEditForm(profile);
+                                            setEditProjects([...projects]);
+                                            setDeletedProjects([]);
                                         }}
                                         className="flex items-center bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-xl backdrop-blur-sm transition-colors font-medium text-sm border border-white/10"
                                     >
@@ -272,6 +399,37 @@ const ProfilePage = () => {
                                 </div>
                             </div>
 
+                            {/* Projects */}
+                            <div className="md:col-span-2 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-4 mt-6">
+                                <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                                    <h2 className="text-lg font-bold text-white">Projects</h2>
+                                    {isEditing && (
+                                        <button
+                                            onClick={handleAddProject}
+                                            className="flex items-center text-sm bg-violet-600/20 hover:bg-violet-600/40 text-violet-300 px-3 py-1.5 rounded-lg transition-colors border border-violet-500/30"
+                                        >
+                                            <Plus size={16} className="mr-1" /> Add Project
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="space-y-4">
+                                    {(isEditing ? editProjects : projects).length > 0 ? (
+                                        (isEditing ? editProjects : projects).map((project, index) => (
+                                            <ProjectRow
+                                                key={isEditing ? index : project.id}
+                                                project={project}
+                                                index={index}
+                                                isEditing={isEditing}
+                                                onChange={handleProjectChange}
+                                                onRemove={handleRemoveProject}
+                                                handleCopy={handleCopy}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p className="text-slate-500 italic p-3">No projects added yet.</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
