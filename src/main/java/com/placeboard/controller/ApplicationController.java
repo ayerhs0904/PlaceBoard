@@ -52,4 +52,12 @@ public class ApplicationController {
             @RequestBody UpdateApplicationStatusDto requestDto) {
         return ResponseEntity.ok(applicationService.updateApplicationStatus(id, requestDto.getStatus()));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApplicationDto> updateApplication(
+            @PathVariable Long id,
+            @RequestBody ApplicationRequestDto requestDto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(applicationService.updateApplication(id, requestDto, userDetails.getUsername()));
+    }
 }

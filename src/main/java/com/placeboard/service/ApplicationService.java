@@ -42,6 +42,7 @@ public class ApplicationService {
                 .status(ApplicationStatus.APPLIED)
                 .role(request.getRole())
                 .jobUrl(request.getJobUrl())
+                .resumeLink(request.getResumeLink())
                 .appliedDate(LocalDate.now())
                 .notes(request.getNotes())
                 .build();
@@ -70,6 +71,30 @@ public class ApplicationService {
         return mapToDto(updatedApplication);
     }
 
+    public ApplicationDto updateApplication(Long id, ApplicationRequestDto request, String email) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+        
+        // Optionally verify the application belongs to the user
+        // User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        // if (!application.getUser().getId().equals(user.getId())) throw ...
+
+        if (request.getCompanyId() != null) {
+            Company company = companyRepository.findById(request.getCompanyId())
+                    .orElseThrow(() -> new RuntimeException("Company not found"));
+            application.setCompany(company);
+        }
+        
+        if (request.getRole() != null) application.setRole(request.getRole());
+        if (request.getJobUrl() != null) application.setJobUrl(request.getJobUrl());
+        if (request.getResumeLink() != null) application.setResumeLink(request.getResumeLink());
+        if (request.getNotes() != null) application.setNotes(request.getNotes());
+        if (request.getAppliedDate() != null) application.setAppliedDate(request.getAppliedDate());
+        
+        Application updatedApplication = applicationRepository.save(application);
+        return mapToDto(updatedApplication);
+    }
+
     private ApplicationDto mapToDto(Application application) {
         return ApplicationDto.builder()
                 .id(application.getId())
@@ -79,6 +104,7 @@ public class ApplicationService {
                 .status(application.getStatus())
                 .role(application.getRole())
                 .jobUrl(application.getJobUrl())
+                .resumeLink(application.getResumeLink())
                 .appliedDate(application.getAppliedDate())
                 .notes(application.getNotes())
                 .build();

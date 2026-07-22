@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import toast from 'react-hot-toast';
+import { isValidUrl, normalizeUrl } from '../utils/urlUtils';
 
 const COLUMNS = [
   { id: 'APPLIED', title: 'APPLIED', color: 'bg-blue-500' },
@@ -17,6 +18,8 @@ const KanbanPage = () => {
   const [companies, setCompanies] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState(null);
+  const [isEditingResume, setIsEditingResume] = useState(false);
+  const [editResumeLink, setEditResumeLink] = useState('');
   
   const [formData, setFormData] = useState({
     companyId: '',
@@ -43,6 +46,36 @@ const KanbanPage = () => {
       setIsModalOpen(true);
     } catch (error) {
       toast.error('Failed to fetch companies');
+    }
+  };
+
+  const handleOpenDetails = (app) => {
+    setSelectedApp(app);
+    setEditResumeLink(app.resumeLink || '');
+    setIsEditingResume(false);
+  };
+
+  const handleSaveResume = async () => {
+    let normalized = normalizeUrl(editResumeLink);
+    if (normalized && !isValidUrl(normalized)) {
+      toast.error('Please enter a valid URL');
+      return;
+    }
+    
+    try {
+      const payload = {
+        ...selectedApp,
+        resumeLink: normalized
+      };
+      const res = await api.put(`/api/applications/${selectedApp.id}`, payload);
+      
+      const updatedApp = res.data;
+      setApplications(apps => apps.map(a => a.id === updatedApp.id ? updatedApp : a));
+      setSelectedApp(updatedApp);
+      setIsEditingResume(false);
+      toast.success('Resume link updated');
+    } catch (error) {
+      toast.error('Failed to update resume link');
     }
   };
 
@@ -133,7 +166,7 @@ const KanbanPage = () => {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                onClick={() => setSelectedApp(app)}
+                                onClick={() => handleOpenDetails(app)}
                                 className="bg-white/5 p-4 rounded-xl shadow mb-3 cursor-pointer border border-white/10 hover:bg-white/10 transition-colors"
                               >
                                 <h3 className="font-bold text-white mb-1">
@@ -229,6 +262,37 @@ const KanbanPage = () => {
             <div className="space-y-3 text-sm text-slate-300">
               <p><strong className="text-white">Status:</strong> {selectedApp.status}</p>
               <p><strong className="text-white">Applied On:</strong> {new Date(selectedApp.appliedDate).toLocaleDateString()}</p>
+              
+              <div>
+                <strong className="block mb-1 text-white">Resume Link:</strong>
+                {isEditingResume ? (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      className="flex-1 bg-white/5 border border-white/10 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-violet-500"
+                      value={editResumeLink}
+                      onChange={e => setEditResumeLink(e.target.value)}
+                      placeholder="https://..."
+                    />
+                    <button onClick={handleSaveResume} className="px-3 py-1 bg-violet-600 rounded text-xs hover:bg-violet-700 text-white">Save</button>
+                    <button onClick={() => setIsEditingResume(false)} className="px-3 py-1 bg-white/10 rounded text-xs hover:bg-white/20 text-white">Cancel</button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    {selectedApp.resumeLink ? (
+                      <a href={selectedApp.resumeLink} target="_blank" rel="noopener noreferrer" className="text-violet-400 hover:text-violet-300 hover:underline break-all">
+                        View Resume
+                      </a>
+                    ) : (
+                      <span className="text-slate-400 italic">No resume linked</span>
+                    )}
+                    <button onClick={() => setIsEditingResume(true)} className="text-xs text-slate-400 hover:text-white underline ml-2">
+                      {selectedApp.resumeLink ? 'Edit' : 'Add link'}
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {selectedApp.notes && (
                 <div>
                   <strong className="block mb-1 text-white">Notes:</strong>

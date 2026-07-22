@@ -147,15 +147,6 @@ const ProfilePage = () => {
         toast.success(`Copied ${fieldName}!`);
     };
 
-    const isValidUrl = (urlStr) => {
-        try {
-            new URL(urlStr);
-            return true;
-        } catch (err) {
-            return false;
-        }
-    };
-
     const handleSave = async (e) => {
         e.preventDefault();
         

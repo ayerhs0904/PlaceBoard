@@ -41,6 +41,7 @@ public class Application {
 
     private String role;
     private String jobUrl;
+    private String resumeLink;
     private LocalDate appliedDate;
     private String notes;
 }

@@ -20,6 +20,7 @@ public class ApplicationDto {
     private ApplicationStatus status;
     private String role;
     private String jobUrl;
+    private String resumeLink;
     private LocalDate appliedDate;
     private String notes;
 }
