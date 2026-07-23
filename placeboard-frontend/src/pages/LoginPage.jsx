@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-import { Mail, Lock, Eye, EyeOff, Loader2, Briefcase } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, Briefcase, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function LoginPage() {
@@ -94,10 +94,10 @@ function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-16 relative">
         <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-xl">
           {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-center space-x-2 mb-10">
+          <Link to="/" className="lg:hidden flex items-center justify-center space-x-2 mb-10 hover:opacity-80 transition-opacity">
             <Briefcase size={32} className="text-violet-500" />
             <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">PlaceBoard</span>
-          </div>
+          </Link>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -105,6 +105,10 @@ function LoginPage() {
             transition={{ duration: 0.5 }}
             className="mb-10 text-center lg:text-left"
           >
+            <Link to="/" className="inline-flex items-center text-sm font-medium text-slate-400 hover:text-slate-300 transition-colors mb-6">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Link>
             <h2 className="text-3xl font-bold text-white mb-2">Welcome back</h2>
             <p className="text-slate-400">Please enter your details to sign in.</p>
           </motion.div>
