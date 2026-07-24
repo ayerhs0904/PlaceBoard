@@ -164,6 +164,7 @@ function RegisterPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             onSubmit={handleRegister} 
             className="space-y-5"
+            autoComplete="off"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Full Name */}
@@ -178,6 +179,7 @@ function RegisterPage() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    autoComplete="new-name"
                     className={`block w-full pl-10 pr-3 py-2.5 border ${errors.name ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                     placeholder="John Doe"
                   />
@@ -197,6 +199,7 @@ function RegisterPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    autoComplete="new-email"
                     className={`block w-full pl-10 pr-3 py-2.5 border ${errors.email ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                     placeholder="you@example.com"
                   />
@@ -217,6 +220,7 @@ function RegisterPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
+                  autoComplete="new-password"
                   className={`block w-full pl-10 pr-10 py-2.5 border ${errors.password ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                   placeholder="••••••••"
                 />
@@ -244,6 +248,7 @@ function RegisterPage() {
                     name="college"
                     value={formData.college}
                     onChange={handleChange}
+                    autoComplete="off"
                     className={`block w-full pl-10 pr-3 py-2.5 border ${errors.college ? 'border-red-400 focus:ring-red-500' : 'border-white/20 focus:ring-violet-500'} rounded-xl shadow-sm placeholder-slate-500 text-white focus:outline-none transition-colors bg-white/10`}
                     placeholder="XYZ Institute"
                   />
